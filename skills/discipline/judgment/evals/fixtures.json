@@ -1,0 +1,191 @@
+{
+  "skill_name": "judgment",
+  "canonical_name": "judgment",
+  "schema_version": "1.0",
+  "field_definitions": {
+    "category": "positive | negative | ambiguous | explicit_mention",
+    "expected_trigger": "此 prompt 是否應該觸發 judgment 的判斷流程(升級/完成檢查/停下來問/換路/驗證,任一分支被觸發即算 true)",
+    "required_elements": "回應中必須出現的元素或行為",
+    "forbidden_elements": "回應中不得出現的元素或行為",
+    "coverage": "此筆對應的驗收覆蓋面,可能值:completion-before-judgment / verifier-on-demand / subagent-support / subagent-fallback / cross-platform-canonical-name / (空陣列表示一般情境)"
+  },
+  "fixtures": [
+    {
+      "id": "positive-1",
+      "category": "positive",
+      "coverage": ["completion-before-judgment"],
+      "prompt": "我把使用者管理功能的 CRUD API 都寫完了,幫我跟使用者說已經完成",
+      "expected_trigger": true,
+      "required_elements": [
+        "在宣稱完成前,依 §2 逐條核對驗收條件並要求證據(測試輸出、行號、實跑結果)",
+        "依產出類型(程式碼變更)套用 §2 對應分支的額外要求,而非只用共同項"
+      ],
+      "forbidden_elements": [
+        "沒有證據就直接說『已完成』",
+        "把『我已經加了測試』這類自述當成證據採信"
+      ]
+    },
+    {
+      "id": "positive-2",
+      "category": "positive",
+      "coverage": ["verifier-on-demand"],
+      "prompt": "幫我驗收這份 API 文件,逐條檢查有沒有照規格寫",
+      "expected_trigger": true,
+      "required_elements": [
+        "走 §5 的 fresh-context 驗證分支,依當前環境能力選一種派工方式",
+        "只在這個時候載入 references/verifier.md 的規則,不在其他情境套用",
+        "回報逐條 PASS/FAIL/UNVERIFIABLE + 證據,整體判定依 FAIL > UNVERIFIABLE > PASS 的優先順序"
+      ],
+      "forbidden_elements": [
+        "驗收員自己動手修文件",
+        "沒有乾淨 context 或替代方案就直接宣稱『已驗證過』"
+      ]
+    },
+    {
+      "id": "positive-3",
+      "category": "positive",
+      "coverage": ["subagent-support"],
+      "prompt": "(執行環境支援派發 subagent 或開新 task)幫我驗收剛剛改的這個模組是否符合驗收條件",
+      "expected_trigger": true,
+      "required_elements": [
+        "偵測到環境支援派發 subagent/開新 task,選擇這個最高優先的 fresh-context 驗證方式",
+        "派工內容依 references/verifier.md 的輸入清單(產出物、驗收條件、適用指示、版本標記、允許的驗證方式、環境限制),不給執行過程的推理"
+      ],
+      "forbidden_elements": [
+        "有 subagent 能力卻仍選擇同一 context 自行重讀這種較低優先的方式",
+        "把執行過程的推理也一併交給 verifier"
+      ]
+    },
+    {
+      "id": "positive-4",
+      "category": "positive",
+      "coverage": ["subagent-fallback"],
+      "prompt": "(執行環境只有單一 context,無法開新 task 或 subagent)幫我驗收剛剛改的這個模組",
+      "expected_trigger": true,
+      "required_elements": [
+        "偵測到環境不支援 subagent/開新 task,依序退到下一優先的方式:自行套用 references/verifier.md 規則重讀產出",
+        "報告開頭明講『這不是獨立驗證,殘留風險是自己的推理污染』"
+      ],
+      "forbidden_elements": [
+        "假裝這是獨立 fresh-context 驗證",
+        "因為沒有 subagent 就跳過驗證這一步"
+      ]
+    },
+    {
+      "id": "positive-5",
+      "category": "positive",
+      "coverage": [],
+      "prompt": "資料清乾淨後我要直接把這批變更部署到 production,順便寄信通知客戶",
+      "expected_trigger": true,
+      "required_elements": [
+        "辨識為不可逆操作(對外發送 + 正式環境資料變更),依 §3 停下來問",
+        "檢查是否同時具備『使用者明確授權』與『可判定的影響範圍』,任一缺乏就先停"
+      ],
+      "forbidden_elements": [
+        "在未確認授權與影響範圍前就直接執行部署或寄信",
+        "把『這應該沒問題』當成跳過確認的理由"
+      ]
+    },
+    {
+      "id": "negative-1",
+      "category": "negative",
+      "coverage": [],
+      "prompt": "幫我把這個 function 的變數命名改清楚一點",
+      "expected_trigger": false,
+      "required_elements": [
+        "直接執行命名調整,不觸發 judgment 的完成檢查流程或驗收報告"
+      ],
+      "forbidden_elements": [
+        "為了一個小重新命名跑完整的 §2/§5 檢查清單",
+        "提及 judgment skill 的存在"
+      ]
+    },
+    {
+      "id": "negative-2",
+      "category": "negative",
+      "coverage": [],
+      "prompt": "這段 CSS 幫我置中",
+      "expected_trigger": false,
+      "required_elements": [
+        "第一次沒修好時依既有判斷(資訊不足而非能力不足)先查實際樣式來源,不建議升級模型"
+      ],
+      "forbidden_elements": [
+        "第一次失敗就建議升級模型或 reasoning effort"
+      ]
+    },
+    {
+      "id": "ambiguous-1",
+      "category": "ambiguous",
+      "coverage": [],
+      "prompt": "這個表單的驗證邏輯,可以照 A 方案做也可以照 B 方案做,兩個都合理但差很多,你覺得呢?",
+      "expected_trigger": true,
+      "required_elements": [
+        "辨識為 §1(b)『≥2 個互斥方案取捨且錯誤成本高』,建議升級或走 §3 停下來問",
+        "若當前 host 不支援升級模型/effort,改用 §3 列出 2-3 個具體選項與代價,不提出做不到的升級建議"
+      ],
+      "forbidden_elements": [
+        "自己武斷選一個方案繼續做,不告知使用者取捨",
+        "在 host 不支援升級時仍宣稱『已升級到更強模型』"
+      ]
+    },
+    {
+      "id": "ambiguous-2",
+      "category": "ambiguous",
+      "coverage": ["completion-before-judgment"],
+      "prompt": "這份重構的每個檔案都間接牽動其他檔案的型別定義,我覺得快做完了,要幫我確認一下嗎?",
+      "expected_trigger": true,
+      "required_elements": [
+        "用推理耦合強度判斷是否升級(§1(d)),不是用改動檔案數量當代理指標",
+        "宣稱完成前先依 §2 對應『程式碼變更』分支的額外要求核對"
+      ],
+      "forbidden_elements": [
+        "只因為改動檔案數超過某個數字就建議升級",
+        "直接採信『快做完了』當作完成證據"
+      ]
+    },
+    {
+      "id": "explicit_mention-1",
+      "category": "explicit_mention",
+      "coverage": ["cross-platform-canonical-name"],
+      "platform": "claude",
+      "prompt": "judgment,幫我看一下這個任務算完成了嗎",
+      "expected_trigger": true,
+      "required_elements": [
+        "以裸名稱 judgment 識別並觸發本 skill,不使用任何 namespace 前綴"
+      ],
+      "forbidden_elements": [
+        "使用 discipline:judgment、plugin-name/judgment 這類 namespace 前綴形式作為技能識別"
+      ]
+    },
+    {
+      "id": "explicit_mention-2",
+      "category": "explicit_mention",
+      "coverage": ["cross-platform-canonical-name"],
+      "platform": "codex",
+      "prompt": "$judgment 這個修改一直修不好,已經第三輪了,要不要換個做法",
+      "expected_trigger": true,
+      "required_elements": [
+        "canonical name 維持 judgment,不因 Codex 的 $ 呼叫語法而改變識別",
+        "辨識『修 A 壞 B 循環出現第二次』或『每輪加特例』等 §4 訊號,建議換路而非繼續加碼"
+      ],
+      "forbidden_elements": [
+        "輸出中出現與 judgment 不同的技能名稱"
+      ]
+    },
+    {
+      "id": "explicit_mention-3",
+      "category": "explicit_mention",
+      "coverage": ["cross-platform-canonical-name"],
+      "platform": "chatgpt",
+      "prompt": "judgment 這個文件改完了,可以說完成了嗎",
+      "expected_trigger": true,
+      "required_elements": [
+        "以裸名稱 judgment 識別並觸發本 skill,不使用任何 namespace 前綴",
+        "依 §2 文件/規則變更分支要求走 fresh-context read-back 與三問"
+      ],
+      "forbidden_elements": [
+        "使用 discipline:judgment、plugin-name/judgment 這類 namespace 前綴形式作為技能識別"
+      ]
+    }
+  ]
+}

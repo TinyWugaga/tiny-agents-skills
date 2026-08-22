@@ -1,0 +1,4 @@
+interface:
+  display_name: "Redraw From References"
+  short_description: "依畫風與角色或概念參考重繪；概念角色先提案、確認後生成"
+  default_prompt: "使用 $redraw-from-references，將圖片 1 作為畫風參考，依圖片 2 的角色內容重繪；若圖片 2 是物品、圖案或其他非角色概念，請先提出文字版角色初版設計讓我確認，確認後再生成圖片。"
