@@ -12,7 +12,7 @@ skills/
     README.md
     judgment/
       SKILL.md
-      references/verifier.md    僅 judgment §5 內部載入,非獨立 skill
+      references/verifier.md    僅 judgment fresh-context 驗收段落載入,非獨立 skill
       evals/fixtures.json
     token-preflight/
       SKILL.md
@@ -23,9 +23,9 @@ skills/
 ```
 
 每個 `<category>/<skill-name>/` 都是一個獨立、可直接部署的 standalone skill,不掛在任何
-plugin 或 namespace 之下。各平台以自己的 skill 載入機制安裝(Claude 的 skills 目錄、Codex
-的 `~/.codex/skills/`、ChatGPT 的 skill 上傳),同一 skill 在所有平台上的 runtime canonical
-name 一律是裸資料夾名稱本身,不會出現 `<collection>:<skill>` 或其他 namespace 前綴。
+plugin 或 namespace 之下。各平台以自己的 skill 載入機制安裝;同一 skill 在所有平台上的
+runtime canonical name 一律是裸資料夾名稱本身,不會出現 `<collection>:<skill>` 或其他
+namespace 前綴。安裝與更新方式由各 collection 的 README 維護。
 
 ## discipline
 
@@ -35,9 +35,9 @@ name 一律是裸資料夾名稱本身,不會出現 `<collection>:<skill>` 或�
 | [`judgment`](skills/discipline/judgment) | 升級 / 完成 / 停損 / 換路 / 品質底線的判準 | 宣告完成前、同一問題重試失敗後 |
 
 兩者都是獨立 standalone skill,canonical name 固定為裸名稱 `token-preflight` / `judgment`。
-`judgment/references/verifier.md` 是 judgment §5 fresh-context 驗收分支的內部規則參照,只在
+`judgment/references/verifier.md` 是 judgment fresh-context 驗收段落的內部規則參照,只在
 該分支被載入,不是獨立 skill 或 agent,不對外部署。細節見
-[`skills/discipline/README.md`](skills/discipline/README.md)。
+[`skills/discipline/README.md`](skills/discipline/README.md),包含安裝、驗證與更新方法。
 
 ## 跨平台原則
 

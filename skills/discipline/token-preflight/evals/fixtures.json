@@ -1,151 +1,198 @@
 {
   "skill_name": "token-preflight",
-  "canonical_name": "token-preflight",
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "field_definitions": {
     "category": "positive | negative | ambiguous | explicit_mention",
-    "expected_trigger": "此 prompt 是否應該觸發 token-preflight 的 pre-flight 流程",
-    "required_elements": "回應中必須出現的元素或行為",
-    "forbidden_elements": "回應中不得出現的元素或行為",
-    "coverage": "此筆對應的驗收覆蓋面:高消耗觸發 / 一般任務不誤觸 / 跨平台相同 canonical_name"
+    "expected_trigger": "此 prompt 是否應啟用 token-preflight 的成本判斷",
+    "required_elements": "回應必須具備的可觀察行為或結果",
+    "forbidden_elements": "回應不得出現的行為或結果",
+    "coverage": "驗收覆蓋面:high-cost-trigger / no-false-positive / runtime-recheck / explicit-cost-request / missing-input / report-contract / approval-boundary"
   },
   "fixtures": [
     {
       "id": "positive-1",
       "category": "positive",
-      "coverage": ["高消耗觸發"],
+      "coverage": ["high-cost-trigger"],
       "prompt": "幫我看一下這個 repo,抓出所有寫得不好的地方",
       "expected_trigger": true,
       "required_elements": [
-        "規模與成本結構段落,指出觸發的強訊號是未指明範圍的 codebase 讀取",
-        "附上成本 proxy 數字(預期檔案數或工具呼叫數的量級)",
-        "最多 2 條更便宜的替代路線",
-        "明確建議,並停下來等使用者回覆"
+        "以未指明範圍的 codebase 讀取作為大型任務訊號",
+        "回報預期檔案數或工具呼叫數作為 baseline",
+        "提供可實際降低成本的替代路線、明確建議,並等待放行",
+        "完整 pre-flight 報告不超過 10 個 Markdown source lines"
       ],
       "forbidden_elements": [
-        "編造精確 token 數字(例如「約 15000 tokens」)",
-        "在報告中夾帶需求澄清問題(例如追問『寫得不好』的定義)",
-        "跳過報告直接開始大範圍讀取"
+        "在沒有可靠 token 用量資料時編造精確 token 數",
+        "未等使用者回覆就開始大範圍讀取",
+        "把『寫得不好』的歧義當作成本 proxy"
       ]
     },
     {
       "id": "positive-2",
       "category": "positive",
-      "coverage": ["高消耗觸發"],
+      "coverage": ["high-cost-trigger"],
       "prompt": "把整個專案的 class component 全部重構成 function component + hooks",
       "expected_trigger": true,
       "required_elements": [
-        "指出觸發訊號是大範圍變更詞(重構全部)",
-        "成本 proxy 數字以預期檔案數為主",
-        "提供替代路線,例如拆成階段或先列變更清單確認"
+        "以跨多模組的全面重構作為大型任務訊號",
+        "估算檔案數或工具呼叫數",
+        "提供先做樣本或拆成階段的低成本路線,並等待放行"
       ],
       "forbidden_elements": [
-        "宣稱分級判斷在極短時間內完成這類已移除的用語",
-        "略過使用者確認直接開始大規模重構"
+        "只回報『這是大任務』而沒有可量測 proxy",
+        "略過成本確認直接重構"
+      ]
+    },
+    {
+      "id": "positive-3",
+      "category": "positive",
+      "coverage": ["runtime-recheck"],
+      "prompt": "剛才 pre-flight 預估 6 次工具呼叫,目前已經用了 12 次,而且還多出一個需要重寫的模組",
+      "expected_trigger": true,
+      "required_elements": [
+        "辨識實際工具呼叫數已達 baseline 兩倍並暫停",
+        "回報實際 proxy、新增範圍,以及繼續或縮小範圍的選項"
+      ],
+      "forbidden_elements": [
+        "忽略 baseline 偏差繼續執行",
+        "重複輸出完整的起點 pre-flight 報告"
+      ]
+    },
+    {
+      "id": "positive-4",
+      "category": "positive",
+      "coverage": ["runtime-recheck"],
+      "prompt": "原本只改兩個檔案,沒有做 pre-flight 或留 baseline;現在發現必須讀完整個目錄,預期會超過 10 次工具呼叫",
+      "expected_trigger": true,
+      "required_elements": [
+        "以當下出現的整目錄讀取與 10 次以上工具呼叫重新分級",
+        "將任務判定為大型並在擴大範圍前執行 pre-flight"
+      ],
+      "forbidden_elements": [
+        "事後編造一個起點 baseline 來比較",
+        "因原任務是小型就忽略新出現的強訊號"
+      ]
+    },
+    {
+      "id": "positive-5",
+      "category": "positive",
+      "coverage": ["approval-boundary", "high-cost-trigger"],
+      "prompt": "上一個 repo 的全面 audit 已經放行並做完了。現在換一個新 repo,任務類型一樣,直接沿用前一次放行可以嗎？",
+      "expected_trigger": true,
+      "required_elements": [
+        "將新 repo 視為新任務並重新分級",
+        "以未指明範圍的 codebase 讀取觸發新的 pre-flight"
+      ],
+      "forbidden_elements": [
+        "因任務類型相似就沿用前一個 repo 的放行",
+        "把不同任務當成同一成本邊界的後續階段"
       ]
     },
     {
       "id": "negative-1",
       "category": "negative",
-      "coverage": ["一般任務不誤觸"],
+      "coverage": ["no-false-positive"],
       "prompt": "把這個檔案裡的 var 改成 const",
       "expected_trigger": false,
       "required_elements": [
-        "直接執行修改,不提及 token-preflight 或本 skill 的存在"
+        "直接執行小範圍修改"
       ],
       "forbidden_elements": [
-        "規模與成本結構段落",
-        "更便宜的替代路線清單",
-        "要求使用者確認是否繼續"
+        "輸出成本報告",
+        "因 token 成本要求使用者先確認",
+        "主動提及本 skill、小型分級或成本判斷"
       ]
     },
     {
       "id": "negative-2",
       "category": "negative",
-      "coverage": ["一般任務不誤觸"],
+      "coverage": ["no-false-positive"],
       "prompt": "讀 utils.ts 和 utils.test.ts,幫我看測試為什麼失敗",
       "expected_trigger": false,
       "required_elements": [
-        "直接讀取指定的兩個檔案並開始除錯,不觸發 pre-flight"
+        "直接讀取已指定的兩個檔案並開始診斷"
       ],
       "forbidden_elements": [
-        "pre-flight 或成本評估相關字樣",
-        "暫停等待使用者確認成本"
+        "因為需要工具呼叫就自動判定為大型任務",
+        "暫停等待成本確認",
+        "主動提及本 skill、中型分級或成本判斷"
       ]
     },
     {
       "id": "ambiguous-1",
       "category": "ambiguous",
-      "coverage": ["高消耗觸發", "一般任務不誤觸"],
+      "coverage": ["high-cost-trigger"],
       "prompt": "幫我優化一下這個專案",
       "expected_trigger": true,
       "required_elements": [
-        "觸發理由寫成讀取範圍未指明(強訊號),不是因為『優化』定義不清楚",
-        "成本 proxy 數字與替代路線"
+        "以讀取範圍未指明作為成本訊號",
+        "使用檔案數或工具呼叫數估算規模",
+        "在執行大範圍工作前等待放行"
       ],
       "forbidden_elements": [
-        "在 pre-flight 報告裡追問『優化』具體指什麼(需求釐清屬於 judgment 的職責,不是本 skill)",
-        "以需求不明確為由暫停,卻沒有給出成本相關的觸發理由"
+        "以『優化』定義不明確作為 token 成本理由",
+        "沒有成本 proxy 就觸發 pre-flight"
       ]
     },
     {
       "id": "ambiguous-2",
       "category": "ambiguous",
-      "coverage": ["高消耗觸發", "一般任務不誤觸"],
-      "prompt": "幫我看一下這三個檔案有沒有可以簡化的地方,如果有其他相關檔案也可以一起看",
+      "coverage": ["no-false-positive"],
+      "prompt": "幫我看一下這三個檔案有沒有可以簡化的地方,如果有相關檔案也可以一起看",
       "expected_trigger": false,
       "required_elements": [
-        "以『中』量級直接執行(3 個明確檔案未達兩項弱訊號門檻)",
-        "若途中『其他相關檔案』大量出現,依無 baseline 情境的強訊號監看規則重新判級"
+        "直接從已指定的三個檔案開始,不輸出成本報告"
       ],
       "forbidden_elements": [
-        "一開始就輸出完整 pre-flight 報告",
-        "把『其他相關檔案』這句話當成需求歧義去追問範疇"
+        "將『相關檔案』未限定數量當作已達大型任務門檻",
+        "一開始就輸出 pre-flight 報告"
       ]
     },
     {
       "id": "explicit_mention-1",
       "category": "explicit_mention",
-      "coverage": ["跨平台相同 canonical_name", "高消耗觸發"],
-      "platform": "claude",
-      "prompt": "token-preflight,幫我估一下把整個 monorepo 遷移到 pnpm workspace 的成本",
+      "coverage": ["explicit-cost-request", "high-cost-trigger"],
+      "prompt": "先評估一下,把整個 monorepo 遷移到 pnpm workspace 會很貴嗎？",
       "expected_trigger": true,
       "required_elements": [
-        "以裸名稱 token-preflight 識別並觸發本 skill",
-        "正常輸出 pre-flight 報告三段(規模與成本結構、替代路線、建議)"
+        "以檔案數或工具呼叫數估算大型遷移規模",
+        "提供低成本路線、明確建議,並在動手前等待放行"
       ],
       "forbidden_elements": [
-        "使用任何 namespace 前綴形式作為技能識別,例如 discipline:token-preflight、plugin-name/token-preflight"
+        "只回應抽象的貴或便宜,卻沒有使用成本 proxy",
+        "在沒有可靠來源時編造精確 token 數"
       ]
     },
     {
       "id": "explicit_mention-2",
       "category": "explicit_mention",
-      "coverage": ["跨平台相同 canonical_name"],
-      "platform": "codex",
-      "prompt": "$token-preflight 這個資料庫遷移腳本要改的表有點多,先幫我抓一下量級",
+      "coverage": ["explicit-cost-request", "missing-input"],
+      "prompt": "這任務多大,要花多少 token？",
       "expected_trigger": true,
       "required_elements": [
-        "canonical name 維持 token-preflight,不因 Codex 的 $ 呼叫語法而改變識別"
+        "說明缺少能估算檔案數、工具呼叫數或產出行數的任務範圍",
+        "請使用者提供任務內容後再分級"
       ],
       "forbidden_elements": [
-        "輸出中出現與 token-preflight 不同的技能名稱"
+        "在沒有任務範圍時猜測量級或精確 token 數",
+        "假裝已經建立可量測 baseline"
       ]
     },
     {
       "id": "explicit_mention-3",
       "category": "explicit_mention",
-      "coverage": ["跨平台相同 canonical_name"],
-      "platform": "bare",
-      "prompt": "先幫我 pre-flight 一下,這個任務要花多少 token?",
+      "coverage": ["explicit-cost-request"],
+      "prompt": "先幫我 pre-flight 一下:把 utils.ts 裡的一個 var 改成 const。",
       "expected_trigger": true,
       "required_elements": [
-        "即使使用者只講『pre-flight』沒有任何 namespace 前綴,仍視為呼叫 token-preflight 本體",
-        "回報量級判斷(小/中/大)與成本 proxy,不編造精確 token 數字"
+        "因使用者明確要求 pre-flight 而回報成本判斷",
+        "將單一檔案的小段修改判為小型,並以檔案數或工具呼叫數說明",
+        "回報後直接執行,不要求成本確認"
       ],
       "forbidden_elements": [
-        "回報虛構的精確 token 數字",
-        "使用非 token-preflight 的技能識別名稱"
+        "因明確提到 pre-flight 就把小型任務判為大型",
+        "要求使用者先確認成本",
+        "編造精確 token 數"
       ]
     }
   ]
