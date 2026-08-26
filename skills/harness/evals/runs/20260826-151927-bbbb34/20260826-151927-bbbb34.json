@@ -1,0 +1,204 @@
+{
+  "migration_id": "20260826-151927-bbbb34",
+  "recorded_at": "2026-08-26T15:33:39.554560+08:00",
+  "claude_code_version": "2.1.221 (Claude Code)",
+  "hashes": {
+    "dispatch_bundle": "211a0f463c1dddf699d916d6418104e4b010133f9741563a4458c2c8059724c6",
+    "judgment_bundle": "5b043ab762b7c610ae885225532104248268e70b6fb3bf3652d94816f24a18b0",
+    "harness_test_suite": "1ed9960a0716abe70916d3560eb5a193f6136640c8ee2622806282c66eb0279f",
+    "claude_md": "165581fbafee0b999c27e5d290a7377c54a36330c337a0ac2acce39ec466836f",
+    "settings_json": "79a4ff04b0f3d5025891978904bf8b18f908b082db349002c8ad194a7a9907dc"
+  },
+  "hash_method": "skills/harness/evals/bundle-hash.sh — 路徑無關(相對路徑+內容 hash)，排除 evals/runs/",
+  "fresh_context_acceptance": {
+    "status": "PASS (C1-C10)",
+    "conditions": "C1-C9",
+    "rounds": 6,
+    "verifier": "Explore subagent（唯讀，不載入 CLAUDE.md，依 judgment/references/verifier.md）",
+    "verified_bundle_hash": "0f3df6a3b43a8676b63718d4dca80f4f0ff46b44b13a402b2798a2afa56af8e0",
+    "defects_found_and_fixed": [
+      "版本標記 hash 規格路徑相依，驗收在版本綁定階段中止（已改共用腳本）",
+      "SKILL.md 漏搬 legacy §0 三條判準：額度共用池、Cowork 並行立場、chat subagent（已補，第三項降級為未驗證）",
+      "SKILL.md 成本章節重複判準殘留一行（已刪）"
+    ]
+  },
+  "source_verification": {
+    "status": "PASS",
+    "scope": "capabilities.md 官方欄 21/21 條對照 2026-08-26 實抓文件",
+    "executed_by": "主對話（需 Web 能力，唯讀驗收 agent 依派工限制不可連網）",
+    "caveat": "非獨立 context；性質為文件字面比對，屬機械檢查"
+  },
+  "fixture_run": {
+    "status": "PASS",
+    "completed_at": "2026-08-26T20:20:50.857142+08:00",
+    "passed": 17,
+    "failed": 0,
+    "total": 17,
+    "method": "每筆以 `claude -p --output-format stream-json` 起真實 fresh session，測 implicit invocation。判定完全機械化:只看 Skill tool_use 事件，不讀模型回應文字。",
+    "harness_model": "claude-sonnet-5（主對話為 Opus 5;較弱模型仍通過，觸發條件的穩健性更強）",
+    "caveats": [
+      "所有 session 以 --disallowedTools 擋掉 Edit/Write/Bash/Agent/WebFetch/WebSearch 來控制成本與風險，非完全正常環境。從結果看不影響 skill 觸發（派工類 prompt 照樣觸發 dispatch）。",
+      "agent-unavailable-1 的條件即由上述 Agent 停用達成，屬真實條件而非模擬。",
+      "3 筆狀態型 fixture 首輪因 cold session 缺前置產出物而測不到目標行為;已補 evals/seed/ 與 preconditions 欄位後重跑通過。斷言未放寬，只是補上缺的前置狀態。"
+    ],
+    "isolation": "dispatch-absent / judgment-absent 以獨立 CLAUDE_CONFIG_DIR 副本達成，使用者的真實設定全程未被動到;已由 init 事件的 skills 欄位驗證生效。",
+    "cost_usd": 2.7372,
+    "sessions": 17,
+    "results": [
+      {
+        "id": "dispatch__positive-1",
+        "category": "positive",
+        "result": "PASS",
+        "triggered": "dispatch",
+        "detail": ""
+      },
+      {
+        "id": "dispatch__positive-2",
+        "category": "positive",
+        "result": "PASS",
+        "triggered": "dispatch",
+        "detail": ""
+      },
+      {
+        "id": "dispatch__positive-3",
+        "category": "positive",
+        "result": "PASS",
+        "triggered": "dispatch",
+        "detail": ""
+      },
+      {
+        "id": "dispatch__positive-4",
+        "category": "positive",
+        "result": "PASS",
+        "triggered": "dispatch",
+        "detail": ""
+      },
+      {
+        "id": "dispatch__negative-1",
+        "category": "negative",
+        "result": "PASS",
+        "triggered": "(無)",
+        "detail": ""
+      },
+      {
+        "id": "dispatch__negative-2",
+        "category": "negative",
+        "result": "PASS",
+        "triggered": "judgment",
+        "detail": ""
+      },
+      {
+        "id": "dispatch__negative-3",
+        "category": "negative",
+        "result": "PASS",
+        "triggered": "judgment",
+        "detail": ""
+      },
+      {
+        "id": "dispatch__ambiguous-1",
+        "category": "ambiguous",
+        "result": "PASS",
+        "triggered": "dispatch",
+        "detail": ""
+      },
+      {
+        "id": "dispatch__explicit-mention-1",
+        "category": "explicit_mention",
+        "result": "PASS",
+        "triggered": "dispatch",
+        "detail": ""
+      },
+      {
+        "id": "harness-routing__handoff-1",
+        "category": "positive",
+        "result": "PASS",
+        "triggered": "dispatch",
+        "detail": ""
+      },
+      {
+        "id": "harness-routing__boundary-1",
+        "category": "negative",
+        "result": "PASS",
+        "triggered": "judgment",
+        "detail": ""
+      },
+      {
+        "id": "harness-routing__boundary-2",
+        "category": "negative",
+        "result": "PASS",
+        "triggered": "judgment",
+        "detail": ""
+      },
+      {
+        "id": "harness-routing__dispatch-absent-1",
+        "category": "positive",
+        "result": "PASS",
+        "triggered": "(無)",
+        "detail": ""
+      },
+      {
+        "id": "harness-routing__dispatch-absent-2",
+        "category": "negative",
+        "result": "PASS",
+        "triggered": "(無)",
+        "detail": ""
+      },
+      {
+        "id": "harness-routing__judgment-absent-1",
+        "category": "positive",
+        "result": "PASS",
+        "triggered": "(無)",
+        "detail": ""
+      },
+      {
+        "id": "harness-routing__agent-unavailable-1",
+        "category": "positive",
+        "result": "PASS",
+        "triggered": "dispatch",
+        "detail": ""
+      },
+      {
+        "id": "harness-routing__ambiguous-1",
+        "category": "ambiguous",
+        "result": "PASS",
+        "triggered": "judgment",
+        "detail": ""
+      }
+    ]
+  },
+  "post_acceptance_amendments": [
+    {
+      "at": "2026-08-26T16:39:21.603682+08:00",
+      "reason": "移除已解除安裝的前端 SOP plugin 與從未存在的 commit agent 的死引用",
+      "changed": [
+        "CLAUDE.md: 刪除 Skill 消歧段、新增 token-preflight 路由列與『只列實際安裝的 skill』規則",
+        "dispatch/references/templates.md: 模板 5 的 review skill 指名改為泛指",
+        "harness/maintenance.md: 新增死路由教訓、§3.1 擴充涵蓋 skill/plugin 移除"
+      ],
+      "bundle_hash_before": "0f3df6a3b43a8676b63718d4dca80f4f0ff46b44b13a402b2798a2afa56af8e0",
+      "bundle_hash_after": "c349e8c29904b10394c792fd3df6a06622f0d8ce65291cf827f824b0943b80b2",
+      "acceptance_impact": "C1–C9 的驗收於 hash 0f3df6a3b43a 通過；本次修改動到 templates.md，C3(六模板齊全且無失效指向) 的證據需以新 hash 重驗，其餘條目依據未變",
+      "re_acceptance": {
+        "status": "PASS",
+        "conditions": "C3 重驗 + C10 新增（CLAUDE.md 路由表目標存在性）",
+        "verified_bundle_hash": "c349e8c29904b10394c792fd3df6a06622f0d8ce65291cf827f824b0943b80b2",
+        "non_blocking_observations": [
+          "templates.md 填好範例中的『見 plugin references/architecture.md』未指名 plugin；驗收員判定不構成死引用（該範例整體為虛構專案），保留不改以免為零正確性增益重啟驗證循環"
+        ]
+      }
+    }
+  ],
+  "run_status": "SUPERSEDED — harness 有缺陷，本輪結果不可作為 release gate 憑據",
+  "superseded_reason": [
+    "runner 用 `|| true` 吞掉 CLI 失敗；scorer 忽略 malformed JSON、不檢查 init/result 事件 → 負向 fixture 可能假綠燈",
+    "scorer 在 NOT_RUN 時仍回 exit 0",
+    "只評 routing assertion，required_elements / forbidden_elements 完全未評，卻被摘要成『17/17 PASS』",
+    "raw trace 未入 repo，結果不可獨立重算",
+    "本檔前段寫 fixture_run: PASS，後段 dispatch_fixtures / routing_fixtures 仍為 NOT_RUN，自相矛盾",
+    "首輪失敗、fixture 修改與最終重跑混在同一 run ID，失敗輸出未保存，無法排除依結果調整測試的偏差"
+  ],
+  "over_claims_retracted": [
+    "「17/17 PASS」→ 正確說法是「routing assertions 17/17，response contract 未評」",
+    "「較弱模型通過所以觸發條件更穩健」→ 單模型單次試驗，推不出跨模型穩健性，撤回"
+  ]
+}

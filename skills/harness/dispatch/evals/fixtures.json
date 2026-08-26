@@ -1,0 +1,173 @@
+{
+  "skill_name": "dispatch",
+  "schema_version": "2.0",
+  "field_definitions": {
+    "category": "positive | negative | ambiguous | explicit_mention",
+    "expected_trigger": "此 prompt 是否應啟用 dispatch 的派工判斷",
+    "required_elements": "回應必須具備的可觀察行為或結果",
+    "forbidden_elements": "回應不得出現的行為或結果",
+    "coverage": "驗收覆蓋面:when-to-delegate / self-do-default / delegation-prompt / report-contract / escalation-path / model-effort-pairing",
+    "preconditions": "執行本 fixture 前必須先建立的環境狀態。缺少時該筆測不到目標行為,不得記為 PASS。"
+  },
+  "fixtures": [
+    {
+      "id": "positive-1",
+      "category": "positive",
+      "coverage": [
+        "when-to-delegate",
+        "model-effort-pairing"
+      ],
+      "prompt": "幫我派個 agent 掃一下整個 repo,找出所有還在用舊版 API 的地方",
+      "expected_trigger": true,
+      "required_elements": [
+        "確認任務落在「大範圍純機械掃描」情境後才派工",
+        "指定唯讀探索 agent,並 per-invocation 明寫低成本 model",
+        "派工單含目標與動機、可機械檢查的驗收條件、回報格式三件套",
+        "驗收條件要求機械計數佐證,而非只給清單"
+      ],
+      "forbidden_elements": [
+        "沒有寫驗收條件或回報格式就派工",
+        "假設探索 agent 預設跑在低成本模型上而不指定 model",
+        "假設探索 agent 讀得到 CLAUDE.md 或專案規則"
+      ]
+    },
+    {
+      "id": "positive-2",
+      "category": "positive",
+      "coverage": [
+        "model-effort-pairing"
+      ],
+      "prompt": "這個子任務要用 sonnet 還是 opus?effort 開多少比較合適?",
+      "expected_trigger": true,
+      "required_elements": [
+        "依任務性質(機械批次 / 定義清楚的子任務 / 架構難題)給出 model 與 effort 取向",
+        "具體別名與級別引用 references/claude-code-capabilities.md,不憑記憶作答",
+        "點出反模式(低階 model 配最高 effort、旗艦 model 配最低 effort)"
+      ],
+      "forbidden_elements": [
+        "憑記憶列出 model 別名或 effort 級別而不查 capabilities 參照",
+        "把 fast mode 說成省額度或省用量的手段"
+      ]
+    },
+    {
+      "id": "positive-3",
+      "category": "positive",
+      "coverage": [
+        "delegation-prompt",
+        "report-contract"
+      ],
+      "prompt": "幫我寫一份派工 prompt,要讓 subagent 去重構 useCart 這個 hook",
+      "expected_trigger": true,
+      "required_elements": [
+        "套用 references/templates.md 的重構模板",
+        "派工單含三件套,且註明不變量與既有測試不得修改",
+        "回報格式限定為改動清單加測試結果,禁止貼完整 diff"
+      ],
+      "forbidden_elements": [
+        "產出沒有驗收條件的派工單",
+        "允許 subagent 回傳整段程式碼或完整 diff"
+      ]
+    },
+    {
+      "id": "positive-4",
+      "category": "positive",
+      "coverage": [
+        "when-to-delegate",
+        "self-do-default"
+      ],
+      "prompt": "這件事我要不要開三個 agent 平行跑?",
+      "expected_trigger": true,
+      "required_elements": [
+        "指出並行 subagent 會倍增消耗,預設依序派工",
+        "說明並行上限為 2 且僅限彼此獨立又都必要的任務",
+        "先檢查任務是否真的落在派工的三情境內"
+      ],
+      "forbidden_elements": [
+        "直接同意開三個平行 agent 而不談成本與必要性"
+      ]
+    },
+    {
+      "id": "negative-1",
+      "category": "negative",
+      "coverage": [
+        "self-do-default"
+      ],
+      "prompt": "幫我把這個 function 改成 async",
+      "expected_trigger": false,
+      "required_elements": [
+        "主對話直接完成,不提及派工"
+      ],
+      "forbidden_elements": [
+        "為了單一小改動派 subagent",
+        "在回應中提及 dispatch skill 或派工判準"
+      ]
+    },
+    {
+      "id": "negative-2",
+      "category": "negative",
+      "coverage": [
+        "escalation-path"
+      ],
+      "prompt": "這個 bug 我連續兩輪都修不好,怎麼辦",
+      "expected_trigger": false,
+      "required_elements": [
+        "先由 judgment 判定該換路、調整能力還是問使用者",
+        "只有在 judgment 判定要調整模型能力之後,才進入 dispatch 的升降級路徑"
+      ],
+      "forbidden_elements": [
+        "由 dispatch 直接接手決定升級或換路",
+        "跳過 judgment 就給出完成或停損判斷"
+      ]
+    },
+    {
+      "id": "negative-3",
+      "category": "negative",
+      "coverage": [
+        "escalation-path"
+      ],
+      "prompt": "幫我驗收 docs/api.md 有沒有照 SPEC.md 寫",
+      "expected_trigger": false,
+      "required_elements": [
+        "由 judgment 負責驗收判準與是否需要 fresh context",
+        "dispatch 只在 judgment 判定要派 fresh-context 驗收後,才提供派工機制"
+      ],
+      "forbidden_elements": [
+        "由 dispatch 自行產生完成條件或驗收判準",
+        "略過 judgment 直接派驗收 agent"
+      ],
+      "preconditions": "需要前置產出物:work dir 內須存在 SPEC.md、src/utils/date.ts、docs/api.md(見 evals/seed/)。本 fixture 測的是**狀態型觸發**——「即將宣告完成」「驗收這份產出」是任務狀態不是關鍵字,cold session 沒有前置工作時該狀態不存在,模型會先要求補齊輸入,測不到觸發。"
+    },
+    {
+      "id": "ambiguous-1",
+      "category": "ambiguous",
+      "coverage": [
+        "when-to-delegate"
+      ],
+      "prompt": "這個任務有點大,要不要拆出去跑?",
+      "expected_trigger": true,
+      "required_elements": [
+        "以三情境表與「派工單比自己讀還費事就自己做」判準回答",
+        "資訊不足以判斷時,先問清楚任務範圍再決定"
+      ],
+      "forbidden_elements": [
+        "沒有套用任何判準就直接決定派或不派"
+      ]
+    },
+    {
+      "id": "explicit-mention-1",
+      "category": "explicit_mention",
+      "coverage": [
+        "when-to-delegate",
+        "delegation-prompt"
+      ],
+      "prompt": "跑一下 dispatch",
+      "expected_trigger": true,
+      "required_elements": [
+        "載入 dispatch 判準並套用於當前任務"
+      ],
+      "forbidden_elements": [
+        "回報找不到該 skill 卻不說明替代做法"
+      ]
+    }
+  ]
+}

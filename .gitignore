@@ -1,2 +1,5 @@
 .DS_Store
 *.zip
+skills/harness/evals/.cfg-*/
+skills/harness/evals/.work-*/
+skills/harness/evals/runs/*/raw/

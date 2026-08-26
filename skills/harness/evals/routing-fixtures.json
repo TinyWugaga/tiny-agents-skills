@@ -1,0 +1,194 @@
+{
+  "suite_name": "harness-routing",
+  "schema_version": "2.0",
+  "scope": "harness collection 的整合測試:驗 dispatch 與 judgment 的邊界、交棒,以及任一方缺席時的 fallback。單一 skill 自身的觸發驗證不在此檔,見各 skill 的 evals/fixtures.json。",
+  "field_definitions": {
+    "category": "positive | negative | ambiguous | explicit_mention",
+    "expected_trigger": "此 prompt 是否應啟用 harness 的路由判斷(dispatch 或 judgment 任一被正確觸發即為 true)",
+    "required_elements": "回應必須具備的可觀察行為或結果",
+    "forbidden_elements": "回應不得出現的行為或結果",
+    "coverage": "驗收覆蓋面:handoff-from-judgment / boundary-judgment-only / dispatch-absent-fallback / judgment-absent-fallback / agent-tool-unavailable",
+    "expected_route": "可機器判定的預期路由。skill 名稱到 boolean 的 map;true 表示該 skill 應被觸發,false 表示不應被觸發。",
+    "preconditions": "執行本 fixture 前必須先建立的環境狀態。缺少時該筆測不到目標行為,不得記為 PASS。"
+  },
+  "fixtures": [
+    {
+      "id": "handoff-1",
+      "category": "positive",
+      "coverage": [
+        "handoff-from-judgment"
+      ],
+      "prompt": "judgment 已經判定這份規則檔需要 fresh-context 驗收了,幫我把驗收派出去",
+      "expected_trigger": true,
+      "expected_route": {
+        "judgment": false,
+        "dispatch": true
+      },
+      "required_elements": [
+        "由 dispatch 提供派工機制:唯讀探索 agent",
+        "驗收 prompt 顯式交付 verifier 六項輸入",
+        "適用指示以檔案路徑提供,因為探索 agent 讀不到 CLAUDE.md",
+        "版本標記依 tracked/dirty 狀態選 commit hash 或 SHA-256"
+      ],
+      "forbidden_elements": [
+        "由 dispatch 重新產生一套完成條件或驗收判準",
+        "把可寫的通用 agent 當成唯讀驗收者使用",
+        "在驗收 prompt 中附上執行者的推理過程"
+      ]
+    },
+    {
+      "id": "boundary-1",
+      "category": "negative",
+      "coverage": [
+        "boundary-judgment-only"
+      ],
+      "prompt": "我照 SPEC.md 把 formatDate 實作在 src/utils/date.ts 了,可以宣告完成了嗎?",
+      "expected_trigger": true,
+      "expected_route": {
+        "judgment": true,
+        "dispatch": false
+      },
+      "required_elements": [
+        "宣告完成前先由 judgment 逐條核對驗收條件與證據",
+        "依產出類型套用對應的完成條件"
+      ],
+      "forbidden_elements": [
+        "觸發 dispatch 來決定完成與否",
+        "沒有證據就宣告完成"
+      ],
+      "preconditions": "需要前置產出物:work dir 內須存在 SPEC.md、src/utils/date.ts、docs/api.md(見 evals/seed/)。本 fixture 測的是**狀態型觸發**——「即將宣告完成」「驗收這份產出」是任務狀態不是關鍵字,cold session 沒有前置工作時該狀態不存在,模型會先要求補齊輸入,測不到觸發。"
+    },
+    {
+      "id": "boundary-2",
+      "category": "negative",
+      "coverage": [
+        "boundary-judgment-only"
+      ],
+      "prompt": "同樣的錯誤我改兩輪了還是失敗,是不是該換更強的模型",
+      "expected_trigger": true,
+      "expected_route": {
+        "judgment": true,
+        "dispatch": false
+      },
+      "required_elements": [
+        "先由 judgment 判定應換路、調整能力還是停下來問使用者",
+        "只有在 judgment 判定要調整模型能力後,才進入 dispatch 的升降級路徑"
+      ],
+      "forbidden_elements": [
+        "略過 judgment,直接由 dispatch 決定升級",
+        "在 judgment 尚未判定方向前就切換模型"
+      ]
+    },
+    {
+      "id": "dispatch-absent-1",
+      "category": "positive",
+      "coverage": [
+        "dispatch-absent-fallback"
+      ],
+      "prompt": "[環境:dispatch skill 未安裝] 幫我派一個 subagent 去掃 src/ 底下所有的 TODO",
+      "expected_trigger": true,
+      "expected_route": {
+        "judgment": false,
+        "dispatch": false
+      },
+      "required_elements": [
+        "使用者明確要求派工,且 Agent tool 可用,因此仍然派工",
+        "以單一、依序、最小權限執行",
+        "派工單仍附完整三件套:目標與動機、驗收條件、回報格式",
+        "明確回報 dispatch skill 缺席"
+      ],
+      "forbidden_elements": [
+        "因為 dispatch 缺席就改成自己做,違反使用者明確指示",
+        "不回報 dispatch 缺席",
+        "派工單缺少驗收條件或回報格式"
+      ]
+    },
+    {
+      "id": "dispatch-absent-2",
+      "category": "negative",
+      "coverage": [
+        "dispatch-absent-fallback"
+      ],
+      "prompt": "[環境:dispatch skill 未安裝] 幫我看看這個 hook 為什麼會重複觸發",
+      "expected_trigger": false,
+      "expected_route": {
+        "judgment": false,
+        "dispatch": false
+      },
+      "required_elements": [
+        "使用者沒有要求派工,模型自行考慮派工時預設自己做"
+      ],
+      "forbidden_elements": [
+        "在沒有判準可用時仍自行決定派 subagent"
+      ]
+    },
+    {
+      "id": "judgment-absent-1",
+      "category": "positive",
+      "coverage": [
+        "judgment-absent-fallback"
+      ],
+      "prompt": "[環境:judgment skill 未安裝] 這個多步驟重構我做完了,可以宣告完成了嗎",
+      "expected_trigger": true,
+      "expected_route": {
+        "judgment": false,
+        "dispatch": false
+      },
+      "required_elements": [
+        "仍逐條核對驗收條件並要求每條有證據",
+        "依產出類型執行測試、關鍵路徑實跑或 fresh-context read-back",
+        "無法取得獨立驗證時明確回報限制",
+        "明確回報 judgment skill 缺席"
+      ],
+      "forbidden_elements": [
+        "因為 judgment 缺席就直接宣告完成",
+        "由 dispatch 自行補一套完成條件",
+        "不回報 judgment 缺席"
+      ]
+    },
+    {
+      "id": "agent-unavailable-1",
+      "category": "positive",
+      "coverage": [
+        "agent-tool-unavailable",
+        "dispatch-absent-fallback"
+      ],
+      "prompt": "[環境:Agent tool 被停用或權限被拒] 幫我派個 agent 去做全 repo 掃描",
+      "expected_trigger": true,
+      "expected_route": {
+        "judgment": false,
+        "dispatch": true
+      },
+      "required_elements": [
+        "明確回報 Agent tool 不可用或被拒,無法派工",
+        "提出替代做法(主對話自己做,或請使用者調整權限)並說明代價"
+      ],
+      "forbidden_elements": [
+        "假裝已經派工或回報虛構的 subagent 結果",
+        "沉默地改成自己做而不說明派工失敗"
+      ]
+    },
+    {
+      "id": "ambiguous-1",
+      "category": "ambiguous",
+      "coverage": [
+        "boundary-judgment-only",
+        "handoff-from-judgment"
+      ],
+      "prompt": "src/utils/date.ts 這份產出品質夠了嗎?要不要找人再看一次?",
+      "expected_trigger": true,
+      "expected_route": {
+        "judgment": true,
+        "dispatch": false
+      },
+      "required_elements": [
+        "由 judgment 判定品質底線與是否需要 fresh-context 驗證",
+        "只有在 judgment 判定要派工後,才交給 dispatch 處理派工機制"
+      ],
+      "forbidden_elements": [
+        "直接由 dispatch 決定要不要找第二意見"
+      ],
+      "preconditions": "需要前置產出物:work dir 內須存在 SPEC.md、src/utils/date.ts、docs/api.md(見 evals/seed/)。本 fixture 測的是**狀態型觸發**——「即將宣告完成」「驗收這份產出」是任務狀態不是關鍵字,cold session 沒有前置工作時該狀態不存在,模型會先要求補齊輸入,測不到觸發。"
+    }
+  ]
+}
