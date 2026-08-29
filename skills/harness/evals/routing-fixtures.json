@@ -1,6 +1,6 @@
 {
   "suite_name": "harness-routing",
-  "schema_version": "2.0",
+  "schema_version": "2.1",
   "scope": "harness collection 的整合測試:驗 dispatch 與 judgment 的邊界、交棒,以及任一方缺席時的 fallback。單一 skill 自身的觸發驗證不在此檔,見各 skill 的 evals/fixtures.json。",
   "field_definitions": {
     "category": "positive | negative | ambiguous | explicit_mention",
@@ -9,7 +9,8 @@
     "forbidden_elements": "回應不得出現的行為或結果",
     "coverage": "驗收覆蓋面:handoff-from-judgment / boundary-judgment-only / dispatch-absent-fallback / judgment-absent-fallback / agent-tool-unavailable",
     "expected_route": "可機器判定的預期路由。skill 名稱到 boolean 的 map;true 表示該 skill 應被觸發,false 表示不應被觸發。",
-    "preconditions": "執行本 fixture 前必須先建立的環境狀態。缺少時該筆測不到目標行為,不得記為 PASS。"
+    "preconditions": "執行本 fixture 前必須先建立的環境狀態。缺少時該筆測不到目標行為,不得記為 PASS。",
+    "env": "執行本 fixture 所需的環境條件,由 runner 以真實機制達成(config-dir 或 deny list),不得寫進 prompt 文字——寫進 prompt 會退化成模擬,測不到真實條件。`config`: 使用哪個隔離 config(no-dispatch / no-judgment);`deny_extra`: 除預設 deny list 外額外停用的工具。省略表示預設環境。"
   },
   "fixtures": [
     {
@@ -80,27 +81,50 @@
       ]
     },
     {
+      "id": "boundary-3",
+      "category": "negative",
+      "coverage": [
+        "boundary-judgment-only"
+      ],
+      "prompt": "幫我驗收 docs/api.md 有沒有照 SPEC.md 寫",
+      "expected_trigger": true,
+      "expected_route": {
+        "judgment": true,
+        "dispatch": false
+      },
+      "required_elements": [
+        "由 judgment 負責驗收判準與是否需要 fresh context",
+        "只有在 judgment 判定要派 fresh-context 驗收後,才由 dispatch 提供派工機制"
+      ],
+      "forbidden_elements": [
+        "由 dispatch 自行產生完成條件或驗收判準",
+        "略過 judgment 直接派驗收 agent"
+      ],
+      "preconditions": "需要前置產出物:work dir 內須存在 SPEC.md、src/utils/date.ts、docs/api.md(見 evals/seed/)。本 fixture 測的是**狀態型觸發**——「即將宣告完成」「驗收這份產出」是任務狀態不是關鍵字,cold session 沒有前置工作時該狀態不存在,模型會先要求補齊輸入,測不到觸發。"
+    },
+    {
       "id": "dispatch-absent-1",
       "category": "positive",
       "coverage": [
         "dispatch-absent-fallback"
       ],
-      "prompt": "[環境:dispatch skill 未安裝] 幫我派一個 subagent 去掃 src/ 底下所有的 TODO",
+      "prompt": "幫我派一個 subagent 去掃 src/ 底下所有的 TODO",
+      "env": {
+        "config": "no-dispatch"
+      },
       "expected_trigger": true,
       "expected_route": {
         "judgment": false,
         "dispatch": false
       },
       "required_elements": [
-        "使用者明確要求派工,且 Agent tool 可用,因此仍然派工",
-        "以單一、依序、最小權限執行",
-        "派工單仍附完整三件套:目標與動機、驗收條件、回報格式",
-        "明確回報 dispatch skill 缺席"
+        "明確回報 dispatch skill 缺席",
+        "給出派或不派的明確判定,不靜默改變做法",
+        "若判定不派,說明理由並讓使用者知道可要求改派"
       ],
       "forbidden_elements": [
-        "因為 dispatch 缺席就改成自己做,違反使用者明確指示",
-        "不回報 dispatch 缺席",
-        "派工單缺少驗收條件或回報格式"
+        "不回報 dispatch skill 缺席",
+        "靜默改成自己做,未說明"
       ]
     },
     {
@@ -109,7 +133,10 @@
       "coverage": [
         "dispatch-absent-fallback"
       ],
-      "prompt": "[環境:dispatch skill 未安裝] 幫我看看這個 hook 為什麼會重複觸發",
+      "prompt": "幫我看看這個 hook 為什麼會重複觸發",
+      "env": {
+        "config": "no-dispatch"
+      },
       "expected_trigger": false,
       "expected_route": {
         "judgment": false,
@@ -128,7 +155,10 @@
       "coverage": [
         "judgment-absent-fallback"
       ],
-      "prompt": "[環境:judgment skill 未安裝] 這個多步驟重構我做完了,可以宣告完成了嗎",
+      "prompt": "這個多步驟重構我做完了,可以宣告完成了嗎",
+      "env": {
+        "config": "no-judgment"
+      },
       "expected_trigger": true,
       "expected_route": {
         "judgment": false,
@@ -153,7 +183,12 @@
         "agent-tool-unavailable",
         "dispatch-absent-fallback"
       ],
-      "prompt": "[環境:Agent tool 被停用或權限被拒] 幫我派個 agent 去做全 repo 掃描",
+      "prompt": "幫我派個 agent 去做全 repo 掃描",
+      "env": {
+        "deny_extra": [
+          "Agent"
+        ]
+      },
       "expected_trigger": true,
       "expected_route": {
         "judgment": false,
