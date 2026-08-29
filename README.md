@@ -24,10 +24,22 @@ skills/
       SKILL.md
       references/templates.md
       references/claude-code-capabilities.md   易變平台事實,官方/本機兩欄
+      references/plan-and-quota.md             額度與消耗事實,同樣分兩欄
+      scripts/bundle-hash.sh                   bundle 版本識別,驗收雙方共用
       evals/fixtures.json
-    evals/routing-fixtures.json  harness 整合測試:skill 間邊界與缺席 fallback
+    evals/                       harness 整合測試與執行工具
+      routing-fixtures.json      skill 間邊界與缺席 fallback
+      run-suite.sh               runner:建 plugin 變體、preflight、依序執行、彙整
+      run-fixture.sh             單筆隔離 session
+      score.py                   routing 判定,三值 exit
+      judge.py                   response contract 判定
+      record.py                  run record:PASS / FAIL / INVALID
+      seed/                      拋棄式受測 repo
   productivity/                 跨平台
-    grill-me/                   持續追問直到收斂
+    README.md
+    grill-me/                   持續追問直到收斂,產出 pre-ADR 決策文件
+      SKILL.md
+      evals/fixtures.json
   dev-workflow.zip              封存,不在使用中
 ```
 
@@ -58,6 +70,16 @@ namespace 前綴。安裝與更新方式由各 collection 的 README 維護。
 易變的平台數值集中在 `dispatch/references/claude-code-capabilities.md`,分「官方支援」與
 「本機觀測」兩欄。細節、安裝與 evals 分層見
 [`skills/harness/README.md`](skills/harness/README.md)。
+
+## productivity
+
+| Skill | 職責 | 觸發 |
+|---|---|---|
+| [`grill-me`](skills/productivity/grill-me) | 連續訪談,逐一釐清不可逆決策,收斂成 pre-ADR 決策文件 | 使用者明確要求被訪談(「拷問我」「壓力測試這個設計」「grill me」) |
+
+只處理明確要求的多輪訪談;一次性 review 與文件撰寫都不觸發。與 `judgment` 的分界是時序:
+`grill-me` 在開工前釐清決策,`judgment` 在執行中判斷完成與停損。安裝與更新見
+[`skills/productivity/README.md`](skills/productivity/README.md)。
 
 ## 跨平台原則
 
