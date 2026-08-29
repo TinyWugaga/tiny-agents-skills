@@ -3,10 +3,14 @@ name: dispatch
 description: >
   在 Claude Code 決定要不要把工作交給 subagent、以及怎麼配 model 與 reasoning effort 時使用。
   用於即將派 subagent 或用 Agent tool、考慮平行派工、詢問「這要用 haiku 還是 sonnet」
-  「effort 開多少」「要不要開 fast mode」「派 agent 會不會很貴」、撰寫派工 prompt,
+  「effort 開多少」「要不要開 fast mode」「派 agent 會不會很貴」「這任務要不要拆出去跑」、
+  撰寫派工 prompt,
   或需要依失敗軌跡調整模型能力與重試策略。
   不用於主對話自己就能完成、不涉及派工或能力調整的一般實作;
   也不用於判斷任務算不算完成或驗收產出物——那走 judgment。
+  預期輸入:當前任務描述與範圍、可用的 agent 與 tool、先前的失敗軌跡。
+  預期產出:派或不派的判定與理由、model 與 effort 的配對決策、
+  以及可直接使用的派工 prompt。
 ---
 
 # 派工調度守則
@@ -16,7 +20,12 @@ description: >
 
 平台能力的具體數值(model 別名、effort 級別、fast mode 計費、巢狀深度、內建 agent 的模型與
 工具範圍)都會過期,一律查 [`references/claude-code-capabilities.md`](references/claude-code-capabilities.md),
-不憑記憶引用。派工 prompt 模板見 [`references/templates.md`](references/templates.md)。
+不憑記憶引用。
+
+**要動手寫派工 prompt 時,先讀 [`references/templates.md`](references/templates.md)**:依任務類型選對
+模板,把佔位逐一填實,不要憑印象自己重寫一份格式相近的派工單。模板裡已經寫死的約束與回報格式
+是該類任務的驗收下限,**填模板時一併帶出,不得因為自己寫的派工單看起來已經夠完整就省略**。
+例如重構類走模板 3,它對不變量、既有測試與測試結果的要求都要留在派工單裡。
 
 ## 何時派工
 
@@ -32,8 +41,14 @@ description: >
 
 **判準:派工 prompt 寫起來比自己讀還費事,就自己做。**
 
-- ✅ 「全 repo 找出所有呼叫 `dispatch()` 且 event type 為 `consumed` 的位置」→ 機械掃描,派工。
-- ❌ 「讀這兩個檔案然後改一行」→ 派工單比自己做還長,自己做。
+**成本可以否決,但不得靜默否決。** 落入上表情境仍判斷不划算時(一次 `grep` 就能解決、
+範圍小到自己讀更快),可以自己做,但**必須在回應裡講出否決的理由與依據**;
+同時告知使用者仍可要求派工;
+使用者聽完仍要求派工,就照做,不再爭論。
+
+- ✅ 「全 repo 找出所有呼叫 `dispatch()` 且 event type 為 `consumed` 的位置」→ 全 repo 搜尋,
+  落入第三種情境,派工。
+- ❌ 「讀這兩個檔案然後改一行」→ 不落入任何一種情境,且派工單比自己做還長,自己做。
 
 **巢狀深度是本機政策,不是平台事實**:平台預設允許 subagent 再派 subagent(深度見 capabilities
 參照)。本機以環境變數限制為一層,所以**需要多階段時由主對話依序派工、在主對話整合**,
@@ -129,8 +144,8 @@ subagent 的回報只准包含:
 
 - 用 `Agent` tool,`subagent_type` 取**唯讀**的內建探索 agent
   (它跳過 CLAUDE.md 與 git status,天然就是乾淨 context)
-- 因為它讀不到 CLAUDE.md,驗收 prompt **必須顯式交付六項輸入**(定義見
-  `~/.claude/skills/judgment/references/verifier.md`,模板見 templates 參照的模板 6):
+- 因為它讀不到 CLAUDE.md,驗收 prompt **必須顯式交付六項輸入**(定義見 judgment 的 verifier
+  規則檔——路徑依實際安裝位置而定,派工前查出完整路徑再填入;模板見 templates 參照的模板 6):
   產出物 / 驗收條件 / 適用指示及其**檔案路徑** / revision 或內容 hash /
   允許的驗證方式 / 環境限制。少任一項,verifier 規則要求回報 UNVERIFIABLE
 - 需要跑會寫入的驗證(測試、build cache)時:在主對話實跑,或用 `isolation: worktree`

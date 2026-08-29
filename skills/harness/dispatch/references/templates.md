@@ -12,7 +12,7 @@
 
 ---
 
-## 1. 搜尋 / 掃 repo（→ 唯讀探索 agent，**明寫 `model: haiku`**）
+## 1. 搜尋 / 掃 repo（→ 唯讀探索 agent，**明寫 `model: {低成本 model 別名，查 claude-code-capabilities.md 後填入}`**）
 
 ```
 目標：找出 {要找什麼，例如「所有呼叫 dispatch() 且 event type 為 'consumed' 的位置」}。
@@ -80,7 +80,7 @@ fresh-context 驗收正確地派出去。
 少任一項,verifier 規則要求該條回報 UNVERIFIABLE。
 
 ```
-第一步：先讀 ~/.claude/skills/judgment/references/verifier.md，依該檔規則執行本次驗收。
+第一步：先讀 {judgment 的 verifier 規則檔完整路徑——依實際安裝位置填入，不要留佔位符}，依該檔規則執行本次驗收。
 
 1. 產出物：{要驗的檔案或內容的完整路徑清單}
 2. 驗收條件（逐條可判定）：
