@@ -1,0 +1,176 @@
+{
+  "skill_name": "grill-me",
+  "schema_version": "2.0",
+  "field_definitions": {
+    "category": "positive | negative | ambiguous | explicit_mention",
+    "expected_trigger": "此 prompt 是否應啟用 grill-me 的多輪訪談流程",
+    "required_elements": "回應必須具備的可觀察行為或結果",
+    "forbidden_elements": "回應不得出現的行為或結果",
+    "coverage": "驗收覆蓋面:explicit-interview-request / constraint-first / irreversible-triage / one-question-cadence / stop-loss / spike-fallback / early-exit-contract / doc-contract / no-file-system-fallback / no-false-positive"
+  },
+  "fixtures": [
+    {
+      "id": "positive-1",
+      "category": "positive",
+      "coverage": ["explicit-interview-request", "constraint-first"],
+      "prompt": "我想做一個即時協作編輯器,你拷問我,問到我自己想清楚為止",
+      "expected_trigger": true,
+      "required_elements": [
+        "先收硬約束:時間、可投入人力、必須相容或不能動的既有系統、成功條件",
+        "列出決策分支並逐項標記不可逆或可逆",
+        "分流結果先給使用者確認,允許他把某項拉進或踢出佇列",
+        "一次只問一題,附為什麼重要、選項與明確推薦"
+      ],
+      "forbidden_elements": [
+        "一次丟出多個決策點的問題",
+        "跳過訪談直接輸出完整方案",
+        "把可逆決策也排進訪談佇列"
+      ]
+    },
+    {
+      "id": "positive-2",
+      "category": "positive",
+      "coverage": ["irreversible-triage", "one-question-cadence"],
+      "prompt": "壓力測試這個設計:我打算把現有 REST API 全部換成 GraphQL",
+      "expected_trigger": true,
+      "required_elements": [
+        "只把不可逆決策排進訪談佇列,可逆項標為「實作時決定」寫進文件",
+        "排序時先處理會阻擋其他決策的項目",
+        "每個選項附主要 trade-off,並明確選一個作為推薦",
+        "硬約束已排除其他方向時改提暫定結論,說明是被哪一條約束排除,並問使用者有無反證"
+      ],
+      "forbidden_elements": [
+        "為了湊數製造在現有約束下不成立的假選項",
+        "列出選項卻不給明確推薦",
+        "同一回合問超過一個決策點"
+      ]
+    },
+    {
+      "id": "positive-3",
+      "category": "positive",
+      "coverage": ["spike-fallback", "stop-loss"],
+      "prompt": "拷問我這個快取設計。先說在前面,命中率我完全沒有數據",
+      "expected_trigger": true,
+      "required_elements": [
+        "缺資訊的項目停止追問,轉為待 spike",
+        "spike 定義最小驗證動作、時間盒,以及什麼結果對應哪個選項",
+        "同一決策點追問兩輪仍無新資訊時停止,改提暫定結論或轉 spike"
+      ],
+      "forbidden_elements": [
+        "使用者已明說缺資料後仍反覆追問同一決策點",
+        "替使用者假設一個命中率並當作已決議",
+        "把待 spike 項目靜默留在佇列不處理"
+      ]
+    },
+    {
+      "id": "positive-4",
+      "category": "positive",
+      "coverage": ["early-exit-contract", "doc-contract"],
+      "prompt": "連續問我到收斂,但我今天只有 20 分鐘,時間到就直接收",
+      "expected_trigger": true,
+      "required_elements": [
+        "提前收斂時輸出暫定決策文件,標題標明是提前收斂的版本",
+        "未解決項逐一標明重啟條件或對應的 spike",
+        "文件包含範圍與非目標、硬約束、成功條件、決策帳本",
+        "每個已決議項附推翻條件"
+      ],
+      "forbidden_elements": [
+        "把未解決項靜默丟掉",
+        "臨時替使用者決定尚未討論的項目",
+        "提前收斂時仍跑完整流程不理會時間上限"
+      ]
+    },
+    {
+      "id": "negative-1",
+      "category": "negative",
+      "coverage": ["no-false-positive"],
+      "prompt": "幫我看一下這份 RFC 有沒有問題",
+      "expected_trigger": false,
+      "required_elements": [
+        "直接做一次性 review,指出問題與建議"
+      ],
+      "forbidden_elements": [
+        "進入逐題訪談佇列",
+        "要求使用者先回答硬約束問題才給回饋",
+        "產出 pre-ADR 決策文件"
+      ]
+    },
+    {
+      "id": "negative-2",
+      "category": "negative",
+      "coverage": ["no-false-positive"],
+      "prompt": "幫我把這份技術規格寫成正式文件",
+      "expected_trigger": false,
+      "required_elements": [
+        "直接協助撰寫或整理文件內容"
+      ],
+      "forbidden_elements": [
+        "啟動決策樹分流與多輪訪談",
+        "把撰寫任務轉成決策帳本"
+      ]
+    },
+    {
+      "id": "ambiguous-1",
+      "category": "ambiguous",
+      "coverage": ["no-false-positive"],
+      "prompt": "這個架構我還沒想清楚,你覺得呢",
+      "expected_trigger": false,
+      "required_elements": [
+        "直接針對架構給出判斷與建議"
+      ],
+      "forbidden_elements": [
+        "未經使用者同意直接進入多輪訪談流程",
+        "先列出一整份決策帳本才回答",
+        "同一回合丟出多個澄清問題"
+      ]
+    },
+    {
+      "id": "ambiguous-2",
+      "category": "ambiguous",
+      "coverage": ["explicit-interview-request", "constraint-first"],
+      "prompt": "這個 migration 計畫有很多不確定的地方,我需要你一題一題跟我確認到收斂",
+      "expected_trigger": true,
+      "required_elements": [
+        "開始前用一句話確認要進行的是多輪訪談",
+        "先收硬約束再列決策樹",
+        "一次一題"
+      ],
+      "forbidden_elements": [
+        "把不確定項一次列成清單請使用者一併回答"
+      ]
+    },
+    {
+      "id": "explicit-mention-1",
+      "category": "explicit_mention",
+      "coverage": ["explicit-interview-request", "one-question-cadence"],
+      "prompt": "grill me on this deployment plan",
+      "expected_trigger": true,
+      "required_elements": [
+        "說明與提問使用繁體中文,程式碼、識別字、API 名稱與專有名詞保留原文",
+        "依收約束、分流、逐題訪談的順序進行",
+        "一次只問一題"
+      ],
+      "forbidden_elements": [
+        "一次列出所有問題",
+        "略過硬約束直接問細節決策"
+      ]
+    },
+    {
+      "id": "explicit-mention-2",
+      "category": "explicit_mention",
+      "coverage": ["doc-contract", "no-file-system-fallback"],
+      "prompt": "用 grill-me 幫我釐清這次重構的決策,這個 session 沒有掛專案目錄",
+      "expected_trigger": true,
+      "required_elements": [
+        "無法讀取專案檔案時不臆測程式碼現況,改問使用者並在文件標為未經程式碼驗證",
+        "無法寫檔時把完整文件輸出在對話中並提示使用者自行保存",
+        "文件末尾包含實作時決定的可逆項清單、待 spike 項目、仍存在的風險與假設"
+      ],
+      "forbidden_elements": [
+        "宣稱已寫入 docs/decisions/ 卻沒有實際寫入",
+        "因為不能寫檔而縮減文件內容",
+        "把讀不到的程式碼現況當作已知事實寫進決策理由"
+      ]
+    }
+  ]
+}
