@@ -10,15 +10,26 @@ routing assertion 由 score.py 機械判定，本檔補上 score.py 做不到的
 
 **Fail-closed**：judge 呼叫失敗、輸出不是合法 JSON、或條目數對不上，一律記 ERROR，
 不得記 PASS。判不出來就說判不出來。
+
+**執行緒邊界**：只有 top-level `parent_tool_use_id` 為 null 的事件算主執行緒證據。
+subagent 內部的工具呼叫不得算進來——那會讓「派工出去、由 subagent 去掃描」被誤讀成
+「主執行緒靜默自己做」，正確的派工行為反而被判 FAIL。主執行緒發出的 `Agent(...)`
+呼叫本身 parent 為 null，不受過濾影響，派工證據不會消失。
 """
 import json, os, subprocess, sys
 
 JUDGE_MODEL = os.environ.get("HARNESS_JUDGE_MODEL", "sonnet")
+JUDGE_TIMEOUT = int(os.environ.get("HARNESS_JUDGE_TIMEOUT", "180"))
+TOOL_INPUT_CAP = 300
 
 PROMPT = """你是回應契約的驗收員。判定一段 AI 回應是否滿足給定條件。
 
 只依據下方「AI 回應」的實際內容判定。不要推測回應者的意圖，不要因為回應「看起來合理」
 就放寬。條件講的行為若沒有實際出現在回應裡，就是 FAIL。
+
+回應中以 `[tool_use]` 開頭的行，是該 session 實際發出的工具呼叫（不是它的敘述文字），
+屬於可採信的行為證據。例如「派工時明寫低成本 model」這種條件，證據就在
+`[tool_use] Agent(...)` 的參數裡，而不一定會出現在散文中。
 
 ## 待判定的 AI 回應
 
@@ -46,8 +57,50 @@ overall 為 PASS 的條件：所有 required 皆 PASS 且所有 forbidden 皆 PA
 """
 
 
+def _clip(v, n=TOOL_INPUT_CAP):
+    t = v if isinstance(v, str) else json.dumps(v, ensure_ascii=False)
+    t = " ".join(t.split())
+    return t if len(t) <= n else t[:n] + "…"
+
+
+def is_main_thread(event):
+    """主執行緒事件判定：top-level `parent_tool_use_id` 為 null。
+
+    非 null 代表該事件屬於某個 subagent 執行緒，其值是對應 Agent tool_use 的 id。
+    欄位不存在時視為主執行緒——舊版 stream-json 沒有這個欄位，不能因此把整份判空。
+    """
+    return event.get("parent_tool_use_id") is None
+
+
+def tool_use_summary(c):
+    """把一次工具呼叫壓成一行證據。
+
+    很多 fixture 的 required_elements 講的是行為（派唯讀 agent、明寫低成本 model、
+    要求機械計數佐證），證據落在 tool_use.input 裡而不在散文。只讀 text block 會
+    讓正確的行為被判 FAIL。
+
+    只會收到主執行緒的 tool_use block（由 response_text 過濾），所以這裡摘要出的每一行
+    都是主執行緒自己發出的呼叫。
+    """
+    name = c.get("name", "?")
+    inp = c.get("input") or {}
+    if name == "Skill":
+        fields = [("skill", inp.get("skill"))]
+    elif name == "Agent":
+        fields = [("subagent_type", inp.get("subagent_type")), ("model", inp.get("model")),
+                  ("effort", inp.get("effort")), ("isolation", inp.get("isolation")),
+                  ("prompt", inp.get("prompt"))]
+    else:
+        fields = list(inp.items())
+    body = ", ".join(f"{k}={_clip(v)}" for k, v in fields if v is not None)
+    return f"[tool_use] {name}({body})"
+
+
 def response_text(jsonl):
-    """抽出 assistant 的所有文字段落。"""
+    """抽出**主執行緒** assistant 的文字段落與工具呼叫摘要。
+
+    subagent 執行緒的事件一律排除，見 is_main_thread。
+    """
     parts = []
     for line in open(jsonl):
         line = line.strip()
@@ -57,10 +110,12 @@ def response_text(jsonl):
             d = json.loads(line)
         except json.JSONDecodeError:
             return None  # 截斷 → 交給呼叫端記 ERROR
-        if d.get("type") == "assistant":
+        if d.get("type") == "assistant" and is_main_thread(d):
             for c in d.get("message", {}).get("content", []):
                 if c.get("type") == "text" and c.get("text", "").strip():
                     parts.append(c["text"].strip())
+                elif c.get("type") == "tool_use":
+                    parts.append(tool_use_summary(c))
     return "\n\n".join(parts)
 
 
@@ -69,11 +124,18 @@ def judge_one(resp, required, forbidden):
         response=resp or "(回應為空)",
         required="\n".join(f"- {e}" for e in required) or "(無)",
         forbidden="\n".join(f"- {e}" for e in forbidden) or "(無)")
-    r = subprocess.run(
-        ["claude", "-p", p, "--output-format", "json", "--model", JUDGE_MODEL,
-         "--disallowedTools", "Edit Write Bash Agent Read Glob Grep WebFetch WebSearch",
-         "--no-session-persistence"],
-        capture_output=True, text=True, stdin=subprocess.DEVNULL)
+    # 例外一律轉成 error dict：judge 中途拋例外會讓後面每一筆都失去 .judge.json 證據。
+    try:
+        r = subprocess.run(
+            ["claude", "-p", p, "--output-format", "json", "--model", JUDGE_MODEL,
+             "--disallowedTools", "Edit Write Bash Agent Read Glob Grep WebFetch WebSearch",
+             "--no-session-persistence"],
+            capture_output=True, text=True, stdin=subprocess.DEVNULL,
+            timeout=JUDGE_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        return {"error": f"judge CLI 逾時 {JUDGE_TIMEOUT}s"}
+    except (FileNotFoundError, OSError) as e:
+        return {"error": f"judge CLI 無法執行: {e}"}
     if r.returncode != 0:
         return {"error": f"judge CLI exit={r.returncode}: {r.stderr[:300]}"}
     try:
