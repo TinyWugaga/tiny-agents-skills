@@ -1,0 +1,28 @@
+{
+  "schema_version": "2.1",
+  "suite_name": "harness-routing",
+  "fixtures": [
+    {
+      "id": "ambiguous-1",
+      "category": "ambiguous",
+      "coverage": [
+        "boundary-judgment-only",
+        "handoff-from-judgment"
+      ],
+      "prompt": "src/utils/date.ts 這份產出品質夠了嗎?要不要找人再看一次?",
+      "expected_trigger": true,
+      "expected_route": {
+        "judgment": true,
+        "dispatch": false
+      },
+      "required_elements": [
+        "由 judgment 判定品質底線與是否需要 fresh-context 驗證",
+        "只有在 judgment 判定要派工後,才交給 dispatch 處理派工機制"
+      ],
+      "forbidden_elements": [
+        "直接由 dispatch 決定要不要找第二意見"
+      ],
+      "preconditions": "需要前置產出物:work dir 內須存在 SPEC.md、src/utils/date.ts、docs/api.md(見 evals/seed/)。本 fixture 測的是**狀態型觸發**——「即將宣告完成」「驗收這份產出」是任務狀態不是關鍵字,cold session 沒有前置工作時該狀態不存在,模型會先要求補齊輸入,測不到觸發。"
+    }
+  ]
+}

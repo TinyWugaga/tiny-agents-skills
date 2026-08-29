@@ -1,0 +1,45 @@
+{
+  "run_id": "20260830-000907-9e",
+  "recorded_at": "2026-08-30T00:09:21.836300+08:00",
+  "run_status": "PASS",
+  "is_contract_evidence": true,
+  "invalid_reason": null,
+  "claude_code_version": "2.1.247 (Claude Code)",
+  "subject_model": "sonnet",
+  "judge_model": "sonnet",
+  "duration_s": null,
+  "cli_failed": 0,
+  "cost": {
+    "preflight_usd": 0.038791,
+    "preflight_sessions": 1,
+    "subject_usd": 0.1978,
+    "judge_usd": 0.0729,
+    "subject_sessions": 1,
+    "judge_sessions": 1,
+    "total_usd": 0.3095
+  },
+  "hashes": {
+    "dispatch_bundle": "fd139f25b7e5745df7c5ab6aa1d20629e40edcb8a807f5277c11acf433eddcae",
+    "judgment_bundle": "5b043ab762b7c610ae885225532104248268e70b6fb3bf3652d94816f24a18b0",
+    "harness_test_suite": "a79d663a84c64bddfbc7089a0cdec24bdbbae0c4f1ba7b3085756e6f5696e6b2"
+  },
+  "hash_method": "skills/harness/dispatch/scripts/bundle-hash.sh — allowlist、路徑無關（相對路徑+內容 hash）、排除未列出路徑與 .DS_Store；skill 模式傳 skill 目錄，suite 模式傳 collection 目錄",
+  "totals": {
+    "fixtures": 1,
+    "routing_pass": 1,
+    "contract_pass": 1
+  },
+  "results": [
+    {
+      "id": "dispatch__positive-3",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": [
+        "dispatch"
+      ]
+    }
+  ]
+}

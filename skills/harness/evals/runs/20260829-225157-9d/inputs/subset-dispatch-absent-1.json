@@ -1,0 +1,31 @@
+{
+  "schema_version": "2.1",
+  "suite_name": "harness-routing",
+  "fixtures": [
+    {
+      "id": "dispatch-absent-1",
+      "category": "positive",
+      "coverage": [
+        "dispatch-absent-fallback"
+      ],
+      "prompt": "幫我派一個 subagent 去掃 src/ 底下所有的 TODO",
+      "env": {
+        "config": "no-dispatch"
+      },
+      "expected_trigger": true,
+      "expected_route": {
+        "judgment": false,
+        "dispatch": false
+      },
+      "required_elements": [
+        "明確回報 dispatch skill 缺席",
+        "給出派或不派的明確判定,不靜默改變做法",
+        "若判定不派,說明理由並讓使用者知道可要求改派"
+      ],
+      "forbidden_elements": [
+        "不回報 dispatch skill 缺席",
+        "靜默改成自己做,未說明"
+      ]
+    }
+  ]
+}

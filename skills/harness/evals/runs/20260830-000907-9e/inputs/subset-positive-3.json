@@ -1,0 +1,34 @@
+{
+  "schema_version": "2.1",
+  "skill_name": "dispatch",
+  "fixtures": [
+    {
+      "id": "positive-3",
+      "category": "positive",
+      "coverage": [
+        "delegation-prompt",
+        "report-contract"
+      ],
+      "prompt": "幫我寫一份派工 prompt,要讓 subagent 去重構 useCart 這個 hook",
+      "expected_trigger": true,
+      "required_elements": [
+        "產出可直接使用的重構派工 prompt,佔位皆已填實,而非說明該怎麼寫",
+        "派工單含三件套,且註明不變量與既有測試不得修改",
+        "回報格式限定為改動清單加測試結果,禁止貼完整 diff"
+      ],
+      "forbidden_elements": [
+        "產出沒有驗收條件的派工單",
+        "允許 subagent 回傳整段程式碼或完整 diff"
+      ]
+    }
+  ],
+  "field_definitions": {
+    "category": "positive | negative | ambiguous | explicit_mention",
+    "expected_trigger": "此 prompt 是否應啟用 dispatch 的派工判斷",
+    "required_elements": "回應必須具備的可觀察行為或結果",
+    "forbidden_elements": "回應不得出現的行為或結果",
+    "coverage": "驗收覆蓋面:when-to-delegate / self-do-default / delegation-prompt / report-contract / escalation-path / model-effort-pairing",
+    "preconditions": "執行本 fixture 前必須先建立的環境狀態。缺少時該筆測不到目標行為,不得記為 PASS。",
+    "env": "執行本 fixture 所需的環境條件,由 runner 以真實機制達成(config-dir 或 deny list),不得寫進 prompt 文字——寫進 prompt 會退化成模擬,測不到真實條件。`config`: 使用哪個隔離 config(no-dispatch / no-judgment);`deny_extra`: 除預設 deny list 外額外停用的工具。省略表示預設環境。"
+  }
+}

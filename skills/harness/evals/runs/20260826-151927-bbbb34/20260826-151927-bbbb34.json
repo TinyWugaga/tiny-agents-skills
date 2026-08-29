@@ -9,7 +9,8 @@
     "claude_md": "165581fbafee0b999c27e5d290a7377c54a36330c337a0ac2acce39ec466836f",
     "settings_json": "79a4ff04b0f3d5025891978904bf8b18f908b082db349002c8ad194a7a9907dc"
   },
-  "hash_method": "skills/harness/evals/bundle-hash.sh — 路徑無關(相對路徑+內容 hash)，排除 evals/runs/",
+  "hash_method": "skills/harness/dispatch/scripts/bundle-hash.sh <目錄> [skill|suite] — 路徑無關(相對路徑+內容 hash)，排除 evals/runs/",
+  "hash_baseline_status": "INVALIDATED — 本輪 hashes 以舊演算法計算(副檔名比對:*.md + fixtures.json)。Batch 2 改為 allowlist 並納入 scripts/** 後，同一份內容會算出不同值。本輪 hash 僅作為歷史觀測保留，**不得拿來對應任何現存 bundle**，也不得用現行腳本重算後覆寫。",
   "fresh_context_acceptance": {
     "status": "PASS (C1-C10)",
     "conditions": "C1-C9",

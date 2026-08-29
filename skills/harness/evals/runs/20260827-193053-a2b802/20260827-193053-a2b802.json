@@ -1,0 +1,194 @@
+{
+  "run_id": "20260827-193053-a2b802",
+  "recorded_at": "2026-08-27T19:32:00.558713+08:00",
+  "run_status": "INVALID",
+  "is_contract_evidence": false,
+  "invalid_reason": "18/18 筆未產生可用觀測（CLI 失敗 18）；樣本：dispatch__positive-1 — routing=ERROR CLI exit_code=1 / contract=FAIL ",
+  "claude_code_version": "2.1.247 (Claude Code)",
+  "subject_model": "sonnet",
+  "judge_model": "sonnet",
+  "duration_s": 67,
+  "cli_failed": 18,
+  "cost": {
+    "subject_usd": 0.0,
+    "judge_usd": 0.144,
+    "subject_sessions": 18,
+    "judge_sessions": 3,
+    "total_usd": 0.144
+  },
+  "hashes": {
+    "dispatch_bundle": "5eb3af787d1f61dce5f9d23772775a6065dae4e1d4fb4533d4a15bf674b17751",
+    "judgment_bundle": "5b043ab762b7c610ae885225532104248268e70b6fb3bf3652d94816f24a18b0",
+    "harness_test_suite": "a4f7fc1b2a9674f069ea4fe4cae05fdce4673be76914fa7da481a46802749348"
+  },
+  "hash_method": "skills/harness/dispatch/scripts/bundle-hash.sh — allowlist、路徑無關（相對路徑+內容 hash）、排除未列出路徑與 .DS_Store；skill 模式傳 skill 目錄，suite 模式傳 collection 目錄",
+  "totals": {
+    "fixtures": 18,
+    "routing_pass": 0,
+    "contract_pass": 0
+  },
+  "results": [
+    {
+      "id": "dispatch__positive-1",
+      "category": "positive",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "dispatch__positive-2",
+      "category": "positive",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "dispatch__positive-3",
+      "category": "positive",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "dispatch__positive-4",
+      "category": "positive",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "dispatch__negative-1",
+      "category": "negative",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "dispatch__negative-2",
+      "category": "negative",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "dispatch__negative-3",
+      "category": "negative",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "dispatch__ambiguous-1",
+      "category": "ambiguous",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "dispatch__explicit-mention-1",
+      "category": "explicit_mention",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__handoff-1",
+      "category": "positive",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__boundary-1",
+      "category": "negative",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__boundary-2",
+      "category": "negative",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__boundary-3",
+      "category": "negative",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__dispatch-absent-1",
+      "category": "positive",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__dispatch-absent-2",
+      "category": "negative",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__judgment-absent-1",
+      "category": "positive",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__agent-unavailable-1",
+      "category": "positive",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__ambiguous-1",
+      "category": "ambiguous",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=1",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "triggered": []
+    }
+  ]
+}
