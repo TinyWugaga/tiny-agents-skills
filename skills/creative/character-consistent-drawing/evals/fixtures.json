@@ -1,0 +1,58 @@
+[
+  {
+    "id": "positive-named-character-scene",
+    "category": "positive",
+    "prompt": "畫 Tifu 在雨夜的公車站撐傘，低角度鏡位，角色外觀維持正式設定。",
+    "expected_trigger": true,
+    "required_elements": [
+      "解析 Tifu 對應的正式角色設計圖",
+      "以使用者要求定義場景、動作與鏡位",
+      "保留未被指定修改的角色設計"
+    ],
+    "forbidden_elements": [
+      "要求使用者重新描述 Tifu 外觀",
+      "自行新增角色裝飾"
+    ]
+  },
+  {
+    "id": "negative-unrelated-landscape",
+    "category": "negative",
+    "prompt": "畫一張沒有角色的高山湖泊日出風景圖。",
+    "expected_trigger": false,
+    "required_elements": [],
+    "forbidden_elements": [
+      "載入角色 registry",
+      "加入 Tifu、Claudi 或 Codxi"
+    ]
+  },
+  {
+    "id": "ambiguous-unknown-character",
+    "category": "ambiguous",
+    "prompt": "畫 Miro 和 Claudi 一起在咖啡店聊天。",
+    "expected_trigger": true,
+    "required_elements": [
+      "解析 Claudi 的正式角色設計資料",
+      "指出 Miro 未登錄並要求設計資料或建立新角色的確認",
+      "不得自行設計 Miro"
+    ],
+    "forbidden_elements": [
+      "因 Miro 缺少資料而忽略 Claudi 的資料解析",
+      "猜測 Miro 的外觀"
+    ]
+  },
+  {
+    "id": "explicit-minimal-edit",
+    "category": "explicit mention",
+    "prompt": "使用 $character-consistent-drawing，把這張 Codxi 圖的表情改成微笑，其他維持不變。",
+    "expected_trigger": true,
+    "required_elements": [
+      "讀取 Codxi 的正式角色設計與獨立設定",
+      "只把表情視為本次修改 delta",
+      "比對並維持角色、鏡位與背景的其他元素"
+    ],
+    "forbidden_elements": [
+      "改變服裝或配色",
+      "重做構圖或背景"
+    ]
+  }
+]

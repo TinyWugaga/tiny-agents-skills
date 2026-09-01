@@ -1,6 +1,10 @@
 .DS_Store
 *.zip
+
+__pycache__/
+
+skills/codex/
+
 skills/harness/evals/.cfg-*/
 skills/harness/evals/.work-*/
 skills/harness/evals/runs/*/raw/
-__pycache__/

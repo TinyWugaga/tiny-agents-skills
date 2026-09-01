@@ -7,13 +7,18 @@
 
 ```
 skills/
-  creative/                     跨平台
-    redraw-from-references/     依參考圖重繪
-  discipline/                   跨平台。任務執行紀律(見下)
+  creative/                       跨平台
+    redraw-from-references/       依參考圖重繪
+    character-consistent-drawing/ 依設計檔繪製圖片
+      SKILL.md
+      references/character-drawing-rules.md
+      references/character-registry.md
+      evals/fixtures.json
+  discipline/                     跨平台。任務執行紀律(見下)
     README.md
     judgment/
       SKILL.md
-      references/verifier.md    僅 judgment fresh-context 驗收段落載入,非獨立 skill
+      references/verifier.md      僅 judgment fresh-context 驗收段落載入,非獨立 skill
       evals/fixtures.json
     token-preflight/
       SKILL.md
@@ -50,10 +55,10 @@ namespace 前綴。安裝與更新方式由各 collection 的 README 維護。
 
 ## discipline
 
-| Skill | 職責 | 觸發 |
-|---|---|---|
-| [`token-preflight`](skills/discipline/token-preflight) | 動手前評估成本量級,只因 token 成本攔截 | 大型任務(未指明範圍的讀取、多檔變更、10+ 工具呼叫) |
-| [`judgment`](skills/discipline/judgment) | 升級 / 完成 / 停損 / 換路 / 品質底線的判準 | 宣告完成前、同一問題重試失敗後 |
+| Skill                                                  | 職責                                       | 觸發                                               |
+| ------------------------------------------------------ | ------------------------------------------ | -------------------------------------------------- |
+| [`token-preflight`](skills/discipline/token-preflight) | 動手前評估成本量級,只因 token 成本攔截     | 大型任務(未指明範圍的讀取、多檔變更、10+ 工具呼叫) |
+| [`judgment`](skills/discipline/judgment)               | 升級 / 完成 / 停損 / 換路 / 品質底線的判準 | 宣告完成前、同一問題重試失敗後                     |
 
 兩者都是獨立 standalone skill,canonical name 固定為裸名稱 `token-preflight` / `judgment`。
 `judgment/references/verifier.md` 是 judgment fresh-context 驗收段落的內部規則參照,只在
@@ -62,8 +67,8 @@ namespace 前綴。安裝與更新方式由各 collection 的 README 維護。
 
 ## harness（平台專屬:僅 Claude Code）
 
-| Skill | 職責 | 觸發 |
-|---|---|---|
+| Skill                                 | 職責                                                        | 觸發                                      |
+| ------------------------------------- | ----------------------------------------------------------- | ----------------------------------------- |
 | [`dispatch`](skills/harness/dispatch) | 要不要派 subagent、派給誰、怎麼寫派工單、失敗了怎麼調整能力 | 即將派工、選 model／effort、寫派工 prompt |
 
 `dispatch` 只管派工調度;**完成判斷與驗收判準屬於 `judgment`**,兩者不重疊也不分叉。
@@ -73,8 +78,8 @@ namespace 前綴。安裝與更新方式由各 collection 的 README 維護。
 
 ## productivity
 
-| Skill | 職責 | 觸發 |
-|---|---|---|
+| Skill                                      | 職責                                                | 觸發                                                             |
+| ------------------------------------------ | --------------------------------------------------- | ---------------------------------------------------------------- |
 | [`grill-me`](skills/productivity/grill-me) | 連續訪談,逐一釐清不可逆決策,收斂成 pre-ADR 決策文件 | 使用者明確要求被訪談(「拷問我」「壓力測試這個設計」「grill me」) |
 
 只處理明確要求的多輪訪談;一次性 review 與文件撰寫都不觸發。與 `judgment` 的分界是時序:

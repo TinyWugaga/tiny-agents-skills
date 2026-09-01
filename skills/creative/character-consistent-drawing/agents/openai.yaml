@@ -1,0 +1,4 @@
+interface:
+  display_name: "角色一致性繪圖"
+  short_description: "依專案角色設計圖維持固定角色外觀，並套用新場景與動作"
+  default_prompt: "Use $character-consistent-drawing to draw Tifu in a new scene while preserving the official character design."
