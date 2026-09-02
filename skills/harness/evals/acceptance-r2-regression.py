@@ -156,6 +156,9 @@ def assert_checker_result(label, result, expected_status, expected_reads, expect
             "%s forbidden_reads %r != %r"
             % (label, payload["forbidden_reads"], expected_forbidden)
         )
+    if expected_status == "error":
+        if not result.stderr.endswith("\n") or result.stderr.endswith("\\n"):
+            raise AssertionError("%s stderr does not end with a real newline" % label)
     if not os.path.isabs(payload["target"]):
         raise AssertionError("%s target is not absolute" % label)
     return lines[0]

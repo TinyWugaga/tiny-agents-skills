@@ -200,6 +200,8 @@ SUBJECT_DOMAINS    REQUIRED_DOMAINS 扣掉 evaluator 與 evaluation_context     
 上述行為測試是主判準且必驗。以下 AST 檢查是**輔助**，不得取代行為測試；兩者任一不過即 FAIL。
 輔助檢查只辨識常數名稱的 `os.environ.get(...)`、`os.getenv(...)`、`os.environ[...]`，
 而且 receiver 必須是名為 `os` 的 `ast.Name`。註解與 docstring 不構成環境變數讀取，不得因字串命中判 FAIL。
+涵蓋邊界：本輔助檢查只涵蓋 `os.` 前綴的上述三種讀取；`from os import environ, getenv`、
+模組別名與 `getattr(...)` 等形式不在靜態檢查範圍內，仍由必驗的行為測試把關。
 
 literal helper 分別處理三條路徑：`ast.Constant(str)` 是主要路徑；`ast.Str` 支援 Python 3.8–3.13，
 已於 Python 3.14 移除；`ast.Index` 支援 Python 3.7–3.8 的 subscript 包裝，官方自 3.9 標為 deprecated，
@@ -291,7 +293,7 @@ def main():
         status = "forbidden" if TARGET_NAME in reads else "clean"
     except Exception as exc:
         status = "error"
-        sys.stderr.write("E-3 checker error: %s\\n" % exc)
+        sys.stderr.write("E-3 checker error: %s\n" % exc)
     emit(status, target, reads)
     return {"clean": 0, "forbidden": 1, "error": 2}[status]
 
