@@ -75,12 +75,12 @@
         "when-to-delegate",
         "self-do-default"
       ],
-      "prompt": "這件事我要不要開三個 agent 平行跑?",
+      "prompt": "這次發布要做三件事：全 repo 機械掃描列出過期 API、用 fresh context 驗收發布文件、修改 README 的一個連結。我要不要開三個 agent 平行跑?",
       "expected_trigger": true,
       "required_elements": [
-        "指出並行 subagent 會倍增消耗,預設依序派工",
+        "指出並行 subagent 會倍增消耗",
         "說明並行上限為 2 且僅限彼此獨立又都必要的任務",
-        "先檢查任務是否真的落在派工的三情境內"
+        "辨識全 repo 機械掃描與 fresh-context 驗收符合派工情境,README 單點修改應由主對話自己做"
       ],
       "forbidden_elements": [
         "直接同意開三個平行 agent 而不談成本與必要性"
@@ -122,16 +122,16 @@
       "id": "negative-3",
       "category": "negative",
       "coverage": [
-        "escalation-path"
+        "when-to-delegate"
       ],
       "prompt": "幫我驗收 docs/api.md 有沒有照 SPEC.md 寫",
       "expected_trigger": false,
       "required_elements": [
-        "驗收判準與是否需要 fresh context 不在 dispatch 的職責範圍內"
+        "直接以 SPEC.md 為既有驗收基準檢查 docs/api.md,不要求使用者先提供派工決策"
       ],
       "forbidden_elements": [
         "由 dispatch 自行產生完成條件或驗收判準",
-        "在判準未定前就派出驗收 agent"
+        "自行新增 SPEC.md 未定義的驗收條件"
       ],
       "preconditions": "需要前置產出物:work dir 內須存在 SPEC.md、src/utils/date.ts、docs/api.md(見 evals/seed/)。本 fixture 測的是**狀態型觸發**——「即將宣告完成」「驗收這份產出」是任務狀態不是關鍵字,cold session 沒有前置工作時該狀態不存在,模型會先要求補齊輸入,測不到觸發。"
     },

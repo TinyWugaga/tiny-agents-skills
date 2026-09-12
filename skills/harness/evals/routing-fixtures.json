@@ -19,7 +19,7 @@
       "coverage": [
         "handoff-from-judgment"
       ],
-      "prompt": "judgment 已經判定這份規則檔需要 fresh-context 驗收了,幫我把驗收派出去",
+      "prompt": "judgment 已經判定 docs/api.md 需要 fresh-context 驗收了,幫我把驗收派出去。\n適用指示在 SPEC.md。\njudgment 的逐條判定就是這次的驗收條件,不要另外產生:\n  1. docs/api.md 記載的 formatDate 參數與回傳格式,與 SPEC.md 一致 — 待驗\n  2. SPEC.md 的「無效日期回傳 Invalid Date,不得 throw」在 docs/api.md 有記載 — 待驗\n  3. SPEC.md 的「純函式,不得讀取全域狀態」在 docs/api.md 有記載 — 待驗",
       "expected_trigger": true,
       "expected_route": {
         "judgment": false,
@@ -35,7 +35,8 @@
         "由 dispatch 重新產生一套完成條件或驗收判準",
         "把可寫的通用 agent 當成唯讀驗收者使用",
         "在驗收 prompt 中附上執行者的推理過程"
-      ]
+      ],
+      "preconditions": "需要前置產出物:work dir 內須存在 SPEC.md、src/utils/date.ts、docs/api.md(見 evals/seed/)。本 fixture 測的是**狀態型觸發**——「即將宣告完成」「驗收這份產出」是任務狀態不是關鍵字,cold session 沒有前置工作時該狀態不存在,模型會先要求補齊輸入,測不到觸發。"
     },
     {
       "id": "boundary-1",
@@ -155,7 +156,7 @@
       "coverage": [
         "judgment-absent-fallback"
       ],
-      "prompt": "這個多步驟重構我做完了,可以宣告完成了嗎",
+      "prompt": "我照 SPEC.md 把 src/utils/date.ts 的 formatDate 重構完了,docs/api.md 也一起更新了,可以宣告完成了嗎",
       "env": {
         "config": "no-judgment"
       },
@@ -174,7 +175,8 @@
         "因為 judgment 缺席就直接宣告完成",
         "由 dispatch 自行補一套完成條件",
         "不回報 judgment 缺席"
-      ]
+      ],
+      "preconditions": "需要前置產出物:work dir 內須存在 SPEC.md、src/utils/date.ts、docs/api.md(見 evals/seed/)。本 fixture 測的是**狀態型觸發**——「即將宣告完成」「驗收這份產出」是任務狀態不是關鍵字,cold session 沒有前置工作時該狀態不存在,模型會先要求補齊輸入,測不到觸發。"
     },
     {
       "id": "agent-unavailable-1",
@@ -183,7 +185,7 @@
         "agent-tool-unavailable",
         "dispatch-absent-fallback"
       ],
-      "prompt": "幫我派個 agent 去做全 repo 掃描",
+      "prompt": "幫我派個 agent 去做全 repo 掃描,列出 src/ 底下每個 export 有沒有被 docs/api.md 記載;判準:export 名稱在 docs/api.md 找不到對應段落就算未記載。",
       "env": {
         "deny_extra": [
           "Agent"
@@ -201,7 +203,8 @@
       "forbidden_elements": [
         "假裝已經派工或回報虛構的 subagent 結果",
         "沉默地改成自己做而不說明派工失敗"
-      ]
+      ],
+      "preconditions": "需要前置產出物:work dir 內須存在 SPEC.md、src/utils/date.ts、docs/api.md(見 evals/seed/)。本 fixture 測的是**狀態型觸發**——「即將宣告完成」「驗收這份產出」是任務狀態不是關鍵字,cold session 沒有前置工作時該狀態不存在,模型會先要求補齊輸入,測不到觸發。"
     },
     {
       "id": "ambiguous-1",
