@@ -1,20 +1,44 @@
 # tiny-agents-skills
 
-自用的 skill 收藏庫。**多數 collection 是跨平台的**(Claude、Codex、ChatGPT 等),
-**`harness/` 是平台專屬的例外**(僅 Claude Code)——差別見下方「跨平台原則」。
+自用的 skill 收藏庫。`creative/`、`discipline/`、`productivity/` 採跨平台設計，
+不代表已在所有平台驗證。`harness/` 的設計目標僅為 Claude Code。
+
+開發規則以 [AGENTS.md](AGENTS.md) 為準；[CLAUDE.md](CLAUDE.md) 只匯入該檔。
+新規範的測試範圍與情境見 [開發規範測試計畫](tests/agent-instructions.md)。
+
+## 平台狀態
+
+| 狀態 | 意義與記錄位置 |
+|---|---|
+| 設計目標平台 | 希望適用的平台與 session，見下表；不等於已驗證或發布承諾 |
+| 本次發布支援平台 | 在該次發布工作單中固定的承諾範圍；必須逐平台完成適用 fixture 驗證，不能為了通過移除失敗平台 |
+| 已驗證平台／版本 | 以實際紀錄中的平台、session、受測 identity、案例與結果為準；不得外推到其他版本或平台 |
+
+| Collection | 設計目標與限制 | 驗證證據入口 |
+|---|---|---|
+| `creative/` | Claude、Codex 等可載入 skill 的 agentic session；所需繪圖能力依各 skill 契約 | 依各 skill 的實測紀錄確認；本 README 未宣稱完成逐平台驗證 |
+| `discipline/` | Claude、Codex 等可載入 skill 的 agentic session | judgment 的部分驗證見 [STATUS.md](skills/harness/evals/STATUS.md)，結果不能推及整個 collection |
+| `productivity/` | Claude、Codex 等可載入 skill 的 agentic session | 依各 skill 的實測紀錄確認；本 README 未宣稱完成逐平台驗證 |
+| `harness/` | 僅 Claude Code | [STATUS.md](skills/harness/evals/STATUS.md) 與 [KNOWN-ISSUES.md](skills/harness/evals/KNOWN-ISSUES.md)；有執行紀錄不代表發布 gate 已通過 |
+
+本 README 不另行指定發布批次或支援清單；以該次已核准工作單為準。設計目標中未納入本次支援的平台，應在該次發布說明標示未驗證。純 chat 不假設會自動載入 repository 中的 skill。
+
+現有 harness runner 的 subject 執行入口是 `claude -p`。其他目標平台沒有自動 runner 時，可依原案例與判準在實際目標環境人工執行，保存輸入、輸出與版本證據；只做文件審閱或模擬回答不算該平台的行為驗證。
+
+本機另有被 `.gitignore` 排除的 `skills/codex/`，其 collection README 限定具備所需 UI 工具的 Codex Desktop。該目錄不隨此儲存庫的版本控制內容交付，但仍受根 AGENTS.md 的開發與安全規範約束。
 
 ## 結構
 
 ```
 skills/
-  creative/                       跨平台
+  creative/                       跨平台設計目標，驗證狀態見上表
     redraw-from-references/       依參考圖重繪
-    character-consistent-drawing/ 依設計檔繪製圖片
+    character-consistent-drawing/ 依設計檔繪製角色一致性繪圖
       SKILL.md
       references/character-drawing-rules.md
       references/character-registry.md
       evals/fixtures.json
-  discipline/                     跨平台。任務執行紀律(見下)
+  discipline/                     跨平台設計目標；任務執行紀律(見下)
     README.md
     judgment/
       SKILL.md
@@ -30,7 +54,6 @@ skills/
       references/templates.md
       references/claude-code-capabilities.md   易變平台事實,官方/本機兩欄
       references/plan-and-quota.md             額度與消耗事實,同樣分兩欄
-      scripts/bundle-hash.sh                   bundle 版本識別,驗收雙方共用
       evals/fixtures.json
     evals/                       harness 整合測試與執行工具
       routing-fixtures.json      skill 間邊界與缺席 fallback
@@ -39,17 +62,31 @@ skills/
       score.py                   routing 判定,三值 exit
       judge.py                   response contract 判定
       record.py                  run record:PASS / FAIL / INVALID
+      manifest.py                run 前後的 identity 快照與 raw trace hash manifest
       seed/                      拋棄式受測 repo
-  productivity/                 跨平台
+  productivity/                 跨平台設計目標
     README.md
     grill-me/                   持續追問直到收斂,產出 pre-ADR 決策文件
       SKILL.md
       evals/fixtures.json
   dev-workflow.zip              封存,不在使用中
+scripts/                        repo 層級工具,不屬於任何 skill bundle
+  bundle-hash.sh                identity hash(hash schema v6:skill／fixtures／contract-fixtures／
+                                runner／evaluator／execution-context／evaluation-context／
+                                rescore-runner)
+  hash-domain-selftest.sh       機械證明八個 domain 互斥,零成本
+  run-provenance-selftest.sh    模擬 run:hash drift／trace 竄改一律 INVALID、缺 manifest 時
+                                judge 不呼叫 CLI,零成本
+  run-rescore.sh                重新評分既有 trace 的唯一建議入口;不寫入來源,
+                                驗證全部排在付費 judge 之前
 ```
 
-每個 `<category>/<skill-name>/` 都是一個獨立、可直接部署的 standalone skill,不掛在任何
-plugin 或 namespace 之下。各平台以自己的 skill 載入機制安裝;同一 skill 在所有平台上的
+版本標記工具刻意放在 repo root 而非某個 skill 的 `scripts/` 下:skill allowlist 含
+`scripts/**`,量測工具若住在裡面,改一次工具就會改變被量測 skill 的 identity,
+把 evaluator 混進 runtime skill 的識別範圍。
+
+每個 `<category>/<skill-name>/` 都是獨立的 standalone skill，不掛在任何
+plugin 或 namespace 之下；可安裝的結構不等於已滿足發布條件。各目標平台以自己的 skill 載入機制安裝；同一 skill 在各目標平台上的
 runtime canonical name 一律是裸資料夾名稱本身,不會出現 `<collection>:<skill>` 或其他
 namespace 前綴。安裝與更新方式由各 collection 的 README 維護。
 
@@ -86,7 +123,7 @@ namespace 前綴。安裝與更新方式由各 collection 的 README 維護。
 `grill-me` 在開工前釐清決策,`judgment` 在執行中判斷完成與停損。安裝與更新見
 [`skills/productivity/README.md`](skills/productivity/README.md)。
 
-## 跨平台原則
+## 跨平台設計原則
 
 **適用於 `creative/`、`discipline/`、`productivity/`:** skill 內文不寫平台專屬的呼叫語法與
 模型名稱,交棒寫成「接著執行 X skill」,能力差異寫成「支援 subagent 時」這類條件。
