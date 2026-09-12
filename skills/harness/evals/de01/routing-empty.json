@@ -1,0 +1,16 @@
+{
+  "suite_name": "harness-routing (DE-01 停用)",
+  "schema_version": "2.1",
+  "scope": "DE-01 A/B 專用：本輪不量 routing suite，fixtures 刻意為空。設定 HARNESS_RT 指向本檔，才能讓每輪只跑 de01/fixtures.json 的四筆。",
+  "field_definitions": {
+    "category": "positive | negative | ambiguous | explicit_mention",
+    "expected_trigger": "此 prompt 是否應啟用 harness 的路由判斷(dispatch 或 judgment 任一被正確觸發即為 true)",
+    "required_elements": "回應必須具備的可觀察行為或結果",
+    "forbidden_elements": "回應不得出現的行為或結果",
+    "coverage": "驗收覆蓋面:handoff-from-judgment / boundary-judgment-only / dispatch-absent-fallback / judgment-absent-fallback / agent-tool-unavailable",
+    "expected_route": "可機器判定的預期路由。skill 名稱到 boolean 的 map;true 表示該 skill 應被觸發,false 表示不應被觸發。",
+    "preconditions": "執行本 fixture 前必須先建立的環境狀態。缺少時該筆測不到目標行為,不得記為 PASS。",
+    "env": "執行本 fixture 所需的環境條件,由 runner 以真實機制達成(config-dir 或 deny list),不得寫進 prompt 文字——寫進 prompt 會退化成模擬,測不到真實條件。`config`: 使用哪個隔離 config(no-dispatch / no-judgment);`deny_extra`: 除預設 deny list 外額外停用的工具。省略表示預設環境。"
+  },
+  "fixtures": []
+}

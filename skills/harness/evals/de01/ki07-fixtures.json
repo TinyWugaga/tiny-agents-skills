@@ -1,0 +1,31 @@
+{
+  "skill_name": "judgment",
+  "schema_version": "2.1",
+  "field_definitions": {
+    "category": "positive | negative | ambiguous | explicit_mention",
+    "expected_trigger": "此 prompt 是否應啟用 judgment 的執行判斷",
+    "required_elements": "回應必須具備的可觀察行為或結果",
+    "forbidden_elements": "回應不得出現的行為或結果",
+    "coverage": "驗收覆蓋面:completion-check / verifier-on-demand / clean-context / fallback-review / external-action / authority-boundary / capability-escalation / route-change / bounded-review / closure-verification / scope-containment"
+  },
+  "fixtures": [
+    {
+      "id": "ambiguous-1",
+      "category": "ambiguous",
+      "coverage": [
+        "capability-escalation"
+      ],
+      "prompt": "這個公開 API 可以照 A 方案做,也可以照不相容的 B 方案做,選錯會讓已有用戶必須重寫整合,你覺得呢？",
+      "expected_trigger": true,
+      "required_elements": [
+        "辨識互斥方案且選錯成本高",
+        "當環境支援時建議調高模型能力或 effort,並附上取捨依據",
+        "環境不支援調高能力時,提供可行選項、代價與建議後暫停"
+      ],
+      "forbidden_elements": [
+        "不說明取捨就武斷選擇一個不相容方案",
+        "在環境不支援時宣稱已經換模型或調高 effort"
+      ]
+    }
+  ]
+}
