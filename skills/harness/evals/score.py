@@ -100,11 +100,19 @@ def load_run(outdir, name):
     return "OK", got, attempted, avail, ""
 
 
-def expected_map(fx):
-    """fixture -> {skill: bool}。dispatch fixtures 只約束 dispatch。"""
+def expected_map(fx, skill_name=None):
+    """fixture -> {skill: bool}，無法判定時回 None（fail-closed）。
+
+    `expected_route` 是跨 skill 的顯式約束，優先。單一 skill 的 fixture 只寫
+    `expected_trigger`，其對象由該檔頂層 `skill_name` 決定——不得預設成任何特定
+    skill，否則每個 suite 都會被拿去問「dispatch 有沒有觸發」。
+    缺 `skill_name` 又沒有 `expected_route` 時預期值無法判定，回 None。
+    """
     if "expected_route" in fx:
         return {k.split(":")[-1]: v for k, v in fx["expected_route"].items()}
-    return {"dispatch": bool(fx["expected_trigger"])}
+    if not skill_name:
+        return None
+    return {skill_name.split(":")[-1]: bool(fx["expected_trigger"])}
 
 
 def score(outdir, *fixture_files):
@@ -122,7 +130,13 @@ def score(outdir, *fixture_files):
             if status != "OK":
                 row.update(routing=status, detail=diag)
             else:
-                exp = expected_map(fx)
+                exp = expected_map(fx, doc.get("skill_name"))
+                if exp is None:
+                    row.update(routing="ERROR",
+                               detail="預期值無法判定：fixture 沒有 expected_route，"
+                                      "且該檔沒有頂層 skill_name")
+                    rows.append(row)
+                    continue
                 bad = [f"{k}: 預期{'觸發' if v else '不觸發'}，"
                        f"實際{'觸發' if (k in got) else '未觸發'}"
                        for k, v in exp.items() if (k in got) != v]

@@ -1,5 +1,5 @@
 #!/bin/sh
-# run-fixture.sh <fixture-id> <prompt> <plugin-dir>
+# run-fixture.sh [--print-context] <fixture-id> <prompt> <plugin-dir>
 #
 # 起一個真實的 fresh Claude Code session，測 implicit invocation。
 #
@@ -20,13 +20,30 @@
 #   HARNESS_SUBJECT_MODEL  受測 model（預設 sonnet）——不 pin 則結果不可重現
 #   HARNESS_DENY_EXTRA     在預設 deny list 之外「額外」停用的工具（fixture 的 env.deny_extra）
 #   HARNESS_TIMEOUT        單筆上限秒數（預設 300）；逾時以 rc 124 記錄，不得記 PASS
+#   HARNESS_RUN_NONCE      本輪 manifest 產生的一次性 nonce，寫進 .meta.json。
+#                          record.py 要求 manifest／trace manifest／每份 meta 三方一致，
+#                          才認這輪的 trace manifest 是當下產生的（否則只算 legacy diagnostic）。
+#
+# `--print-context`：印出本檔決定的執行環境 descriptor（model、CLI flags、deny list）後結束，
+# 不起任何 session。存在的理由是 execution-context identity domain 需要這些值，而 deny list
+# 只有這裡有；讓 run-suite.sh 手抄一份必然漂移，於是 hash 會宣稱環境沒變而實際上變了。
+# 路徑一律以固定 placeholder 取代——rules／plugin／settings 都是每輪 mktemp 的副本，
+# 把路徑寫進 descriptor 會讓同一份環境每輪算出不同 hash。
 #
 # **Fail-closed**：CLI 失敗不吞。退出碼、stderr、實際 prompt、plugin dir、model 與 deny list
 # 都落成旁證檔，讓 scorer 能把「跑失敗」跟「跑完但沒觸發」分開。
 set -eu
 
-[ $# -eq 3 ] || { echo "usage: $0 <fixture-id> <prompt> <plugin-dir>" >&2; exit 2; }
-ID="$1"; PROMPT="$2"; PLUGIN="$3"
+PRINT_CTX=0
+if [ "${1:-}" = "--print-context" ]; then PRINT_CTX=1; shift; fi
+
+if [ "$PRINT_CTX" -eq 1 ]; then
+  [ $# -eq 0 ] || { echo "usage: $0 --print-context" >&2; exit 2; }
+  ID=""; PROMPT=""; PLUGIN=""
+else
+  [ $# -eq 3 ] || { echo "usage: $0 [--print-context] <fixture-id> <prompt> <plugin-dir>" >&2; exit 2; }
+  ID="$1"; PROMPT="$2"; PLUGIN="$3"
+fi
 BASE="$(cd "$(dirname "$0")" && pwd)"
 OUT="${HARNESS_OUT:-$BASE/out}"
 WORK="${HARNESS_WORK:-$BASE/work}"
@@ -34,10 +51,6 @@ MODEL="${HARNESS_SUBJECT_MODEL:-sonnet}"
 TMO="${HARNESS_TIMEOUT:-300}"
 RULES="${HARNESS_RULES_FILE:-}"
 SETTINGS="${HARNESS_SETTINGS_FILE:-}"
-mkdir -p "$OUT" "$WORK"
-
-[ -d "$PLUGIN" ] || { echo "plugin dir 不存在: $PLUGIN" >&2; exit 2; }
-[ -n "$RULES" ] && [ -f "$RULES" ] || { echo "HARNESS_RULES_FILE 未設或不存在: $RULES" >&2; exit 2; }
 
 # 預設允許 Agent 與 Bash：
 #   - 擋掉 Agent，派工類 fixture 的 response contract 永遠測不過。
@@ -47,6 +60,33 @@ DENY="Edit Write NotebookEdit WebFetch WebSearch"
 DENY="$DENY Bash(rm:*) Bash(rmdir:*) Bash(mv:*) Bash(dd:*) Bash(chmod:*) Bash(chown:*)"
 DENY="$DENY Bash(git push:*) Bash(git reset:*) Bash(git checkout:*) Bash(curl:*) Bash(npm:*)"
 DENY="$DENY ${HARNESS_DENY_EXTRA:-}"
+
+# --- execution-context descriptor ---
+# 只描述 run 層級的環境。fixture 層級的 env.deny_extra 屬 fixtures domain（它就寫在
+# fixtures JSON 裡），不重複記在這裡；run-suite.sh 因此在不設 HARNESS_DENY_EXTRA 的
+# 情況下呼叫本模式，得到的是基底 deny list。
+if [ "$PRINT_CTX" -eq 1 ]; then
+  printf 'subject_model=%s\n' "$MODEL"
+  printf 'timeout_s=%s\n' "$TMO"
+  printf 'output_format=stream-json --verbose\n'
+  printf 'setting_sources=project,local\n'
+  printf 'disable_claude_mds=1\n'
+  printf 'session_persistence=off\n'
+  printf 'plugin_dir=<run-plugin-variant>\n'
+  printf 'add_dir=<run-plugin-variant>\n'
+  printf 'append_system_prompt_file=<injected-rules>\n'
+  if [ -n "$SETTINGS" ]; then
+    printf 'settings=<sanitized-settings>\n'
+  else
+    printf 'settings=absent\n'
+  fi
+  printf 'deny_base=%s\n' "$DENY"
+  exit 0
+fi
+
+mkdir -p "$OUT" "$WORK"
+[ -d "$PLUGIN" ] || { echo "plugin dir 不存在: $PLUGIN" >&2; exit 2; }
+[ -n "$RULES" ] && [ -f "$RULES" ] || { echo "HARNESS_RULES_FILE 未設或不存在: $RULES" >&2; exit 2; }
 
 # POSIX watchdog：macOS 沒有 GNU timeout，不能假設它存在。
 # 主 shell 直接輪詢，不另開背景 job——多一個背景 job 會在被 kill 時讓 shell 把
@@ -99,11 +139,12 @@ set -e
 
 # scorer 以此判定該筆是否真的跑完；缺這個檔一律視為 ERROR，不得記 PASS
 python3 - "$OUT/$ID.meta.json" "$ID" "$RC" "$PLUGIN" "$WORK" "$PROMPT" "$DENY" "$MODEL" "$TMO" \
-         "$RULES" "$SETTINGS" <<'META'
+         "$RULES" "$SETTINGS" "${HARNESS_RUN_NONCE:-}" <<'META'
 import json, sys, datetime
-p, fid, rc, plugin, work, prompt, deny, model, tmo, rules, settings = sys.argv[1:12]
+p, fid, rc, plugin, work, prompt, deny, model, tmo, rules, settings, nonce = sys.argv[1:13]
 rc = int(rc)
 json.dump({"id": fid, "exit_code": rc, "timed_out": rc == 124,
+           "run_nonce": nonce or None,
            "plugin_dir": plugin, "setting_sources": "project,local",
            "rules_file": rules, "settings_file": settings or None,
            "disable_claude_mds": True,

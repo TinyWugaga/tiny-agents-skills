@@ -53,6 +53,8 @@ CASES = {
               tool_result("t9", parent="toolu_agent_1"), DONE],
     # 缺 tool_result：成敗無法判定 → fail-closed ERROR
     "orphan": [INIT, skill_call("t1", "dispatch"), DONE],
+    # judgment 觸發：用來驗預期值對象是否跟著 skill_name 走
+    "judgment_ok": [INIT, skill_call("t1", "judgment"), tool_result("t1"), DONE],
 }
 
 
@@ -92,6 +94,41 @@ def main():
         check("triggered 為空", row["triggered"] == [])
         check("attempted_failed 記錄該次失敗呼叫", row["attempted_failed"] == ["dispatch"])
         check("detail 說明有失敗呼叫", "失敗的 Skill 呼叫" in row["detail"])
+
+        print("expected_map（預期值對象來自 skill_name）")
+        t = {"id": "x", "category": "positive", "expected_trigger": True}
+        f = {"id": "x", "category": "negative", "expected_trigger": False}
+        check("skill_name=judgment + true", score.expected_map(t, "judgment") == {"judgment": True})
+        check("skill_name=judgment + false", score.expected_map(f, "judgment") == {"judgment": False})
+        check("skill_name=dispatch + true", score.expected_map(t, "dispatch") == {"dispatch": True})
+        check("skill_name=dispatch + false", score.expected_map(f, "dispatch") == {"dispatch": False})
+        r = {"id": "x", "category": "positive", "expected_trigger": True,
+             "expected_route": {"discipline:judgment": False, "dispatch": True}}
+        check("expected_route 優先且去 namespace",
+              score.expected_map(r, "judgment") == {"judgment": False, "dispatch": True})
+        check("無 expected_route 且無 skill_name → None（fail-closed）",
+              score.expected_map(t, None) is None)
+
+        # 端到端：judgment suite 的 fixture 不得被拿去問 dispatch 有沒有觸發。
+        fxj = {"skill_name": "judgment", "fixtures": [
+            {"id": "positive-1", "category": "positive", "expected_trigger": True}]}
+        _write(d, "judgment__positive-1", CASES["judgment_ok"])
+        fxjp = os.path.join(d, "fxj.json")
+        json.dump(fxj, open(fxjp, "w"))
+        rowj = score.score(d, fxjp)[0]
+
+        # suite_name 但缺 expected_route → 預期值無法判定，不得靜默通過。
+        fxn = {"suite_name": "harness-routing", "fixtures": [
+            {"id": "boundary-9", "category": "boundary", "expected_trigger": True}]}
+        _write(d, "harness-routing__boundary-9", CASES["ok"])
+        fxnp = os.path.join(d, "fxn.json")
+        json.dump(fxn, open(fxnp, "w"))
+        rown = score.score(d, fxnp)[0]
+
+        print("score（單一 skill suite 端到端）")
+        check("judgment 觸發時 judgment suite 判 PASS", rowj["routing"] == "PASS")
+        check("judgment 記入 triggered", rowj["triggered"] == ["judgment"])
+        check("缺 skill_name 且無 expected_route → ERROR", rown["routing"] == "ERROR")
 
     print()
     if fails:
