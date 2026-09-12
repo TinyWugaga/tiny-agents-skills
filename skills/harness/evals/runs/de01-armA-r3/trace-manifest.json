@@ -1,0 +1,18 @@
+{
+  "recorded_at": "2026-09-04T13:26:06.622159+08:00",
+  "algorithm": "sha256",
+  "digest": "e2511e23fa3ef868feff3bf32d0094d46b38c81b801a3b26f5bea79aff666ff0",
+  "run_nonce": "bd42e2529cdc390fa10ea4adba70e84a",
+  "files": {
+    "_preflight.jsonl": "6863bdd8774244f8a214eef3a7b6d0fdab4b05e1d9d29cc23013132a72971705",
+    "_preflight.meta.json": "1a99bb540f0a0bcdb01b7606b9368c3fd1e34e730a64632215c0dc2f60e0a9d5",
+    "judgment__positive-1.jsonl": "d987307a61efcfea9a6d45e3617a4c61dcf250ba06f7bd9fbf6474dde9abf926",
+    "judgment__positive-1.meta.json": "f48d216771d4b517fe03f38a7a5bdb7eab5cd9085583f15bcfab8e96d911f976",
+    "judgment__positive-2.jsonl": "e099badff87302b4b372be8f03312022c62dd80b7c5a6ba51a7b2623f7c3b2a8",
+    "judgment__positive-2.meta.json": "4581b5c81db0e9fadeef5bf50f1b54f8c32d70a455aa65998a95949c3c8648c8",
+    "judgment__positive-4.jsonl": "ce173dc42ec46f6e06ac5b7c2384001deb8061af4da2662765ccd19b0cac4b28",
+    "judgment__positive-4.meta.json": "eae99e3694fbdf504b564ac94d4babfd8b15eb1edbe7a686e0983f4ed6879f50",
+    "judgment__positive-5.jsonl": "dbcf16b1f6805e9fcae1ddf51866bd289804d2bd5c5035cf0dfa8e7724151c61",
+    "judgment__positive-5.meta.json": "0b060baaaed925d35f5bf042d05135244a1c59b334297d31381874d7d765616e"
+  }
+}

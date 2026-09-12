@@ -1,0 +1,133 @@
+{
+  "run_id": "de01-armB-r3",
+  "recorded_at": "2026-09-04T13:07:08.423681+08:00",
+  "run_status": "FAIL",
+  "evidence_class": "contract_evidence",
+  "is_contract_evidence": true,
+  "invalid_reason": null,
+  "claude_code_version": "2.1.247 (Claude Code)",
+  "subject_model": "sonnet",
+  "judge_model": "sonnet",
+  "duration_s": 534,
+  "cli_failed": 0,
+  "cost": {
+    "preflight_usd": 0.046924999999999994,
+    "preflight_sessions": 1,
+    "subject_usd": 0.6368,
+    "judge_usd": 0.4008,
+    "subject_sessions": 4,
+    "judge_sessions": 4,
+    "total_usd": 1.0845
+  },
+  "hash_schema": "v6",
+  "hashes": {
+    "dispatch_skill": "2d6c0d99b1c4ca927e2c06c82e065c389fa6a6b8ddbc325b0e9bde9bc071c4fc",
+    "judgment_skill": "a26b436888d81e7181199932590ca29f21e58ff9b8066eb792458e68ed5b3d47",
+    "token_preflight_skill": "be72017e9fc7952e9a403cf90e951669496b08f4339938bc73a2829d44ef592a",
+    "evaluator": "65bc6c07d058697cda34045637d3223568cf09626cc38b8385bac46d41157480",
+    "runner": "005ed2f71ac49a8b6747dd1c43f42c8ee67315a9fb3ec8ce395f921ccf6cee3c",
+    "fixtures": "7a1b54c1eddf710e030323ab6124e525d983ef5b32a1316d1780dd12d08d4738",
+    "execution_context": "e7beb6eded81b04fae8bee2076dec7ceeefc5f55f60980aebd3b7fc4cfb9d4e0",
+    "evaluation_context": "64996161082a8b43374e911c1b5e1d2c4ba36333cd324c53cfc37caecdc2b33c"
+  },
+  "record_kind": "source",
+  "derived_from": null,
+  "hash_provenance": null,
+  "provenance": {
+    "manifest_file": "skills/harness/evals/runs/de01-armB-r3/manifest.json",
+    "problems": [],
+    "start_recorded_at": "2026-09-04T12:58:15.265255+08:00",
+    "end_recorded_at": "2026-09-04T13:07:08.364101+08:00",
+    "start_end_identical": true,
+    "trace_manifest_digest": "513818e5dc1247e6c2a7d6f16c0abe5567006a6d3526345e9d1a9e82eb1899ca",
+    "trace_manifest_origin": "contemporaneous",
+    "trace_manifest_origin_notes": [],
+    "run_nonce": "5a2d1dc3825dd9a440f4c2ab12dcd437",
+    "trace_manifest": {
+      "recorded_at": "2026-09-04T13:02:45.065164+08:00",
+      "algorithm": "sha256",
+      "digest": "513818e5dc1247e6c2a7d6f16c0abe5567006a6d3526345e9d1a9e82eb1899ca",
+      "run_nonce": "5a2d1dc3825dd9a440f4c2ab12dcd437",
+      "files": {
+        "_preflight.jsonl": "11edb5a39fee4838f37126632f8331e12de5df379ecadaeada8b80699a062284",
+        "_preflight.meta.json": "642dadda63f6c4874b6cd122d76c525f1e769d8cfa4d4da5c5c9558e645199cd",
+        "judgment__positive-1.jsonl": "8486d94340294252958952c5940fd36ab86c689cd8c85346d4100282c3632d7f",
+        "judgment__positive-1.meta.json": "26a4c6d354a57e4be0af9efa44cea3bebe2f1e6ac698b791a58d3195d940f30b",
+        "judgment__positive-2.jsonl": "3aace701e9091d60eabdd0ac52109dca034eaf5057aa6d7ea519da3c4d56bf86",
+        "judgment__positive-2.meta.json": "ae7b09d30b3c9e2b2aca64a12885dcd430b9852d5777bacbbcf392b5e977aefc",
+        "judgment__positive-4.jsonl": "7a1166808084aa8c6bcf33a2133af0fc66cd1e9e1ac6529833d40e9d2d1c843e",
+        "judgment__positive-4.meta.json": "e02c4a596a420a85bc484f5b307a9ab82ed8f48359aadfffb5b89e7893c8e7e9",
+        "judgment__positive-5.jsonl": "40ef6dbb83188083c11c98fcddeef8dc51f0309f873fdbacb2c31f64e66ae9ed",
+        "judgment__positive-5.meta.json": "0b9227f29fccec411bbb0a49aed434776015943b4cbca6262611de01b568572c"
+      }
+    }
+  },
+  "hash_method": "scripts/bundle-hash.sh — allowlist、路徑無關（相對路徑+內容 hash）、排除未列出路徑與 .DS_Store。六個互斥 domain：skill／evaluator／runner／fixtures／execution-context／evaluation-context。值取自 run-start 快照，並與 run-end 快照比對。**不同 hash_schema 的值不得直接比較**",
+  "fixture_files": [
+    "skills/harness/evals/de01/fixtures.json",
+    "skills/harness/evals/de01/routing-empty.json",
+    "skills/harness/evals/seed/.gitignore",
+    "skills/harness/evals/seed/SPEC.md",
+    "skills/harness/evals/seed/docs/api.md",
+    "skills/harness/evals/seed/src/api/client.ts",
+    "skills/harness/evals/seed/src/api/orders.ts",
+    "skills/harness/evals/seed/src/api/products.ts",
+    "skills/harness/evals/seed/src/api/users.ts",
+    "skills/harness/evals/seed/src/hooks/useCart.ts",
+    "skills/harness/evals/seed/src/utils/date.ts"
+  ],
+  "totals": {
+    "fixtures": 4,
+    "routing_pass": 3,
+    "contract_pass": 1
+  },
+  "warnings": [],
+  "results": [
+    {
+      "id": "judgment__positive-1",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-2",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-4",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-5",
+      "category": "positive",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "contract_anomaly": null,
+      "triggered": []
+    }
+  ]
+}

@@ -1,0 +1,469 @@
+{
+  "run_id": "b23b-J-r1",
+  "recorded_at": "2026-09-11T23:36:11.428110+08:00",
+  "run_status": "INVALID",
+  "evidence_class": "contract_evidence",
+  "is_contract_evidence": false,
+  "invalid_reason": "28/28 筆未產生可用觀測（CLI 失敗 2）；樣本：judgment__positive-1 — routing=PASS  / contract=NOT_RUN 無 .judge.json；provenance 不成立：post-judge manifest 不存在: post-judge-manifest.json",
+  "claude_code_version": "2.1.263 (Claude Code)",
+  "subject_model": "sonnet",
+  "judge_model": "sonnet",
+  "duration_s": 2286,
+  "cli_failed": 2,
+  "cost": {
+    "preflight_usd": 0.18078,
+    "preflight_sessions": 1,
+    "subject_usd": null,
+    "judge_usd": 0.0,
+    "subject_sessions": 28,
+    "judge_sessions": 0,
+    "total_usd": null
+  },
+  "hash_schema": "v6",
+  "hashes": {
+    "dispatch_skill": "2d6c0d99b1c4ca927e2c06c82e065c389fa6a6b8ddbc325b0e9bde9bc071c4fc",
+    "judgment_skill": "93956caa84dc453f34d0f87b674de759b87059608d6d509f2f30d4d48a5f6818",
+    "token_preflight_skill": "be72017e9fc7952e9a403cf90e951669496b08f4339938bc73a2829d44ef592a",
+    "evaluator": "481c7dd69570e79ce03b300bfe9f1a2dce65c36fcf54e6bf7744eba7794fdd13",
+    "runner": "b2b4958ba9aced9828161d7c03990e3aa7eb63706057f06cc2c56610978e04b4",
+    "fixtures": "3d225afc58e479eef05efc156d599c94b57684bcd729e754411831889bad3d4f",
+    "execution_context": "e7beb6eded81b04fae8bee2076dec7ceeefc5f55f60980aebd3b7fc4cfb9d4e0",
+    "evaluation_context": "44abd795f668ee5ff4cb44cbbbf711c1b25e0b699ecd325a672bf80265abe96a"
+  },
+  "context_components": {
+    "execution_context": {
+      "rules": "165581fbafee0b999c27e5d290a7377c54a36330c337a0ac2acce39ec466836f",
+      "settings": "a89ad3df7500f358f5a4f009dd1165bcc0f12316922a2ced6a79f721fb16db04",
+      "descriptor": "e378beb1c7982c112a64517c56c3ac5c95a8741068bcb3a44300317a230d5ac5"
+    },
+    "evaluation_context": {
+      "descriptor": "ed90f46556bf2d6e38b89ca27e30b12ddd47dc6100158bc77c547e32ad2e32ba"
+    }
+  },
+  "record_kind": "source",
+  "derived_from": null,
+  "hash_provenance": null,
+  "provenance": {
+    "manifest_file": "skills/harness/evals/runs/b23b-J-r1/manifest.json",
+    "problems": [
+      "post-judge manifest 不存在: post-judge-manifest.json"
+    ],
+    "start_recorded_at": "2026-09-11T22:58:06.544430+08:00",
+    "end_recorded_at": "2026-09-11T23:36:11.356493+08:00",
+    "start_end_identical": false,
+    "trace_manifest_digest": "c8536737a2cb9df54f3bdd496fdeee9004fefc1b7f572ea94ee774e400ec037f",
+    "trace_manifest_origin": "contemporaneous",
+    "trace_manifest_origin_notes": [],
+    "run_nonce": "65034b307c6e89aa776f2f57912bfd11",
+    "trace_manifest": {
+      "recorded_at": "2026-09-11T23:36:10.730704+08:00",
+      "algorithm": "sha256",
+      "digest": "c8536737a2cb9df54f3bdd496fdeee9004fefc1b7f572ea94ee774e400ec037f",
+      "run_nonce": "65034b307c6e89aa776f2f57912bfd11",
+      "files": {
+        "_preflight.jsonl": "c9d80442b15c2727caab0574f56fe163be2d85612ec0b6240582813c578d565d",
+        "_preflight.meta.json": "264927da4e0d1b9cb1d47588718aeaba6869e26b0c939129dc5229b4538ca5f3",
+        "harness-routing__agent-unavailable-1.jsonl": "955763d5012de5d6b7b3f0d1f67ed4db27667b5bd7a57b00034cd96bf59df92a",
+        "harness-routing__agent-unavailable-1.meta.json": "8a29b7c909923b2d37b7f6c82b9f46c8b0f7a9355ca90fc533501c245b9121da",
+        "harness-routing__ambiguous-1.jsonl": "e7088fbe76815cced78063df0dd069df364a0c542fddcb6f8c9274ccc4f4f1e5",
+        "harness-routing__ambiguous-1.meta.json": "765100b127c31476a0ae828e58b19cd0bf2699c74988671798cb0ca994374c4a",
+        "harness-routing__boundary-1.jsonl": "810f5489dfc04a4ebcef9fb134ed850519642bc8e97d55199231b86e79a5d4de",
+        "harness-routing__boundary-1.meta.json": "2f69423c6a1b75a32c320cec05fc79b159c5ab83c67809cce2a9b83d040613a5",
+        "harness-routing__boundary-2.jsonl": "d48a4e3998be8fd56356611fbbc436c904972712374b91901622424ee6d28d05",
+        "harness-routing__boundary-2.meta.json": "6fb8d71ed23fc01dd2f5e4b8f141e202ab1951dc6590cc52d66f2a4441b164a5",
+        "harness-routing__boundary-3.jsonl": "b5d313874c544ba1f9efe2b97a9f5c3863b15bb5def3881a08c4c2c19e881239",
+        "harness-routing__boundary-3.meta.json": "5e4af3fe0867db86ffa184f8e3971803942ef498e3123f0803bd9be4c37b569f",
+        "harness-routing__dispatch-absent-1.jsonl": "092df605d1d79e14dd36acfb037c7f0d8ab7e4bf701ef9031324f86f3febfabb",
+        "harness-routing__dispatch-absent-1.meta.json": "f1d875b2cf1fc0e0983300211af91b5d43421517545d48709416277cef261fd9",
+        "harness-routing__dispatch-absent-2.jsonl": "cbe5cfeb4c697cc50e074cb3a61c7168edab69ec68c3cb0ecddda995708ed1c6",
+        "harness-routing__dispatch-absent-2.meta.json": "d64f272633e3c68130245ac336829efc51435c6db2c0602ea8859a9f17acda42",
+        "harness-routing__handoff-1.jsonl": "4a4b59d68ffc79e71be741b29873d1bc73020f5f89d515249a353b73ca63f71f",
+        "harness-routing__handoff-1.meta.json": "67a5daa2a9a145606fd57b33e41fb66dbafb7b96bcb1d425544c0cc3fb122b06",
+        "harness-routing__judgment-absent-1.jsonl": "350d7b0d6ade2d473acf4a546f4ac8da4e00d3a8978b6fe993701dc254ce3eb6",
+        "harness-routing__judgment-absent-1.meta.json": "b381bde0541df4b0e0a19c682f94ee96f89a145a4f1970b6afe6cec67b59efa4",
+        "judgment__ambiguous-1.jsonl": "3db1616bf703634df54f8932afb87815f5bbf90b3186579ff0c3746eb3e1d776",
+        "judgment__ambiguous-1.meta.json": "d3317e766fd9478e2e6a0f72b23bfbce70204fa377ef48c4c058fa0aa9e602ff",
+        "judgment__ambiguous-2.jsonl": "74732533f9322c5c52d20b4b366a6c0add5eb7cf852339582711ff416be24594",
+        "judgment__ambiguous-2.meta.json": "3274769fb051a2bfeabed11db0028a90786c9cba9dc0e29ce635810629a745a4",
+        "judgment__ambiguous-3.jsonl": "708cee28b4095e96587bcbfb75597634005a628190f112ed769ca745bf1bd336",
+        "judgment__ambiguous-3.meta.json": "7a75fe9a459286ec152072cce81424686feaa32f9ba5a226336b5ce8f33dafc6",
+        "judgment__explicit_mention-1.jsonl": "30c0044295608a2e6f71e73028461bda0d6e9a991b593af968634d88694fc25c",
+        "judgment__explicit_mention-1.meta.json": "2922de5ebdb2aedf2fe0325e3ca7f140ff0d029ea225514d3444a66b5dfef52d",
+        "judgment__explicit_mention-2.jsonl": "31fc10f9012d87b4b4560f76dc826ccc6570e2e6d9908c34702c48397e65febb",
+        "judgment__explicit_mention-2.meta.json": "9579c5ab2aeb622ca5fa7155f5f5b5b5aa91dacca5fb4a9f79c56f48f90a47b4",
+        "judgment__explicit_mention-3.jsonl": "d9b774b7e7430e07c200ec90489649cc5257b4f76f2fef4e42ccc25f948e77d4",
+        "judgment__explicit_mention-3.meta.json": "5358f5c68a4c0e5e2069bd75d3adfb8ba1483daf8df7b55bbc16a619fdb6d13a",
+        "judgment__negative-1.jsonl": "a352ca9a962c5597ad6816d17797e182bf4046170ed59666feb0e632e2354185",
+        "judgment__negative-1.meta.json": "a9b0803f330b5232abc909a562cdc9eba47387335a672109041be23e94e932f0",
+        "judgment__negative-2.jsonl": "e15862022da4ebf4801eb6f5fa32a498e616b2f7ba644667f0f42c3b9e217231",
+        "judgment__negative-2.meta.json": "6d230f5a5d814d09d97398264af3d634ef06d4ca1b17d4571728a8107f3f13b2",
+        "judgment__negative-3.jsonl": "19f54ca2965d8f25734148c58445b4abd29f3b77ac6c58919dcfa0d9a194fbc5",
+        "judgment__negative-3.meta.json": "fb463efc27722a1ebb55476126bfb39ac36423cbbe46df9d9459a03f29b6d98d",
+        "judgment__positive-1.jsonl": "061520a8aad8b8188a292985531e602e0439ab214f17955b8a9140af5cf88ca4",
+        "judgment__positive-1.meta.json": "6dd9816f3deec0c9e1336e5e82f8aa1c45f0adc0073c34b138771f2c1ad80ff3",
+        "judgment__positive-10.jsonl": "25651293272bd0cdb295484adb9f929ecdff3cc02b68df7036ad22d78990dc40",
+        "judgment__positive-10.meta.json": "771da3c2ec68201c47840a8d2bcee0b981a3a64aa1e8affa3d2593dfcd6d8215",
+        "judgment__positive-2.jsonl": "895957469218c2d739da32cb450f2587b7ed97127a6accee1cf4d046e2d5b4e3",
+        "judgment__positive-2.meta.json": "b461155885b2f302da898e0d447c34ddd37e5483faabaa045d15fa15a35bee71",
+        "judgment__positive-3.jsonl": "12587ed40daffc74487893e68cfa071fd715246b26434f3f78cad4f817451d19",
+        "judgment__positive-3.meta.json": "c64059022e9a4ee843ca33f9c2d0bcaf31eec87104a6ec30cd13441b55cb450c",
+        "judgment__positive-4.jsonl": "9213157532c9cd9eda51956bbb503ae33c61fa31e65b874044a903f9fb57d887",
+        "judgment__positive-4.meta.json": "a6f80a7a3fc1484f51769f4449a6b337977aa5fc90a4c3e1ff478a7e3595cafc",
+        "judgment__positive-5.jsonl": "5675aab8ba8a932e0b1587c1e27357de5d8f3f2dbf5863d6183f00e031540260",
+        "judgment__positive-5.meta.json": "38c04786d48ee07db285f54189f21b930c9814d75e702617c36ca42bb30e719a",
+        "judgment__positive-6.jsonl": "8c6bdc21d6ed2ede751d5a50d8f643ef639135f8cb00ca520fa742fd5f08db52",
+        "judgment__positive-6.meta.json": "e899aa021b03bea0d9870f50fb1b6c6fa05407c0a328fa62e7ae74b0547ec1e0",
+        "judgment__positive-7.jsonl": "d7f3e18ea0aef284cb1ec5420f060c54c14f1d720d4a72577d315efc4af46de9",
+        "judgment__positive-7.meta.json": "b583a3ec1ede100921399342fa40e3a0c8206102fb959abb9700911695275fe8",
+        "judgment__positive-8.jsonl": "9231ea64bfa026eb2fa8e48d20119d63963c1d975f546d10c35b26f86cf99d25",
+        "judgment__positive-8.meta.json": "94329c11ff48220230a62107a0c0e2c6c18ba7e026da7f8e3d55b4298410fd9b",
+        "judgment__positive-9.jsonl": "d60b7dc3bb101568375fbbc1567fc6b92e6befe9791915fecba5ea02b15b6bc1",
+        "judgment__positive-9.meta.json": "30fbe739e686149ff11cf3fb8fcf9fc56257f800c014fd83b6e9aaf68ed66805"
+      }
+    },
+    "post_judge_manifest_digest": null,
+    "post_judge_manifest": null
+  },
+  "hash_method": "scripts/bundle-hash.sh — allowlist、路徑無關（相對路徑+內容 hash）、排除未列出路徑與 .DS_Store。六個互斥 domain：skill／evaluator／runner／fixtures／execution-context／evaluation-context。值取自 run-start 快照，並與 run-end 快照比對。**不同 hash_schema 的值不得直接比較**",
+  "fixture_files": [
+    "skills/discipline/judgment/evals/fixtures.json",
+    "skills/harness/evals/routing-fixtures.json",
+    "skills/harness/evals/seed/.gitignore",
+    "skills/harness/evals/seed/SPEC.md",
+    "skills/harness/evals/seed/docs/api.md",
+    "skills/harness/evals/seed/src/api/client.ts",
+    "skills/harness/evals/seed/src/api/orders.ts",
+    "skills/harness/evals/seed/src/api/products.ts",
+    "skills/harness/evals/seed/src/api/users.ts",
+    "skills/harness/evals/seed/src/hooks/useCart.ts",
+    "skills/harness/evals/seed/src/utils/date.ts"
+  ],
+  "totals": {
+    "fixtures": 28,
+    "routing_pass": 26,
+    "contract_pass": 0
+  },
+  "warnings": [],
+  "results": [
+    {
+      "id": "judgment__positive-1",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-2",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-3",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-4",
+      "category": "positive",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=124",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": []
+    },
+    {
+      "id": "judgment__positive-5",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-6",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__negative-1",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": []
+    },
+    {
+      "id": "judgment__negative-2",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": []
+    },
+    {
+      "id": "judgment__ambiguous-1",
+      "category": "ambiguous",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__ambiguous-2",
+      "category": "ambiguous",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__explicit_mention-1",
+      "category": "explicit_mention",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__explicit_mention-2",
+      "category": "explicit_mention",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-7",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-8",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-9",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__negative-3",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": []
+    },
+    {
+      "id": "judgment__ambiguous-3",
+      "category": "ambiguous",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__explicit_mention-3",
+      "category": "explicit_mention",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-10",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "harness-routing__handoff-1",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "dispatch"
+      ]
+    },
+    {
+      "id": "harness-routing__boundary-1",
+      "category": "negative",
+      "routing": "ERROR",
+      "routing_detail": "CLI exit_code=124",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__boundary-2",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "harness-routing__boundary-3",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "harness-routing__dispatch-absent-1",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__dispatch-absent-2",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__judgment-absent-1",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__agent-unavailable-1",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "dispatch"
+      ]
+    },
+    {
+      "id": "harness-routing__ambiguous-1",
+      "category": "ambiguous",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "NOT_RUN",
+      "contract_detail": "無 .judge.json",
+      "contract_anomaly": null,
+      "triggered": [
+        "judgment"
+      ]
+    }
+  ]
+}

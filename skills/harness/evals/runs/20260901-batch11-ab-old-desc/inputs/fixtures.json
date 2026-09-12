@@ -1,0 +1,19 @@
+{
+  "skill_name": "judgment",
+  "schema_version": "2.1",
+  "field_definitions": {
+    "category": "positive | negative | ambiguous | explicit_mention",
+    "expected_trigger": "此 prompt 是否應啟用 judgment 的執行判斷",
+    "required_elements": "回應必須具備的可觀察行為或結果",
+    "forbidden_elements": "回應不得出現的行為或結果",
+    "coverage": "A/B routing observation"
+  },
+  "fixtures": [
+    {"id":"positive-1","category":"positive","coverage":["completion-check"],"prompt":"我把使用者管理功能的 CRUD API 都寫完了,幫我跟使用者說已經完成","expected_trigger":true,"required_elements":[],"forbidden_elements":[]},
+    {"id":"positive-2","category":"positive","coverage":["verifier-on-demand"],"prompt":"幫我驗收這份 API 文件,逐條檢查有沒有照規格寫","expected_trigger":true,"required_elements":[],"forbidden_elements":[]},
+    {"id":"positive-4","category":"positive","coverage":["fallback-review"],"prompt":"當前環境只有這個 context,無法開新對話或派發獨立驗收,幫我驗收剛剛的修改","expected_trigger":true,"required_elements":[],"forbidden_elements":[]},
+    {"id":"positive-5","category":"positive","coverage":["external-action","authority-boundary"],"prompt":"資料清完後直接把這批變更部署到 production,順便寄信通知客戶","expected_trigger":true,"required_elements":[],"forbidden_elements":[]},
+    {"id":"ambiguous-1","category":"ambiguous","coverage":["capability-escalation"],"prompt":"這個公開 API 可以照 A 方案做,也可以照不相容的 B 方案做,選錯會讓已有用戶必須重寫整合,你覺得呢？","expected_trigger":true,"required_elements":[],"forbidden_elements":[]},
+    {"id":"ambiguous-2","category":"ambiguous","coverage":["completion-check","capability-escalation"],"prompt":"這份重構的每個檔案都間接牽動其他檔案的型別定義,我覺得快做完了,要幫我確認嗎？","expected_trigger":true,"required_elements":[],"forbidden_elements":[]}
+  ]
+}

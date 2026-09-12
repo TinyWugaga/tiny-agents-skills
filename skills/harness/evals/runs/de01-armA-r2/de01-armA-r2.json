@@ -1,0 +1,127 @@
+{
+  "run_id": "de01-armA-r2",
+  "recorded_at": "2026-09-04T13:22:49.615990+08:00",
+  "run_status": "FAIL",
+  "evidence_class": "contract_evidence",
+  "is_contract_evidence": true,
+  "invalid_reason": null,
+  "claude_code_version": "2.1.247 (Claude Code)",
+  "subject_model": "sonnet",
+  "judge_model": "sonnet",
+  "duration_s": 497,
+  "cli_failed": 0,
+  "cost": {
+    "preflight_usd": 0.045881,
+    "preflight_sessions": 1,
+    "subject_usd": 0.6323,
+    "judge_usd": 0.3721,
+    "subject_sessions": 4,
+    "judge_sessions": 4,
+    "total_usd": 1.0503
+  },
+  "hash_schema": "v6",
+  "hashes": {
+    "dispatch_skill": "2d6c0d99b1c4ca927e2c06c82e065c389fa6a6b8ddbc325b0e9bde9bc071c4fc",
+    "judgment_skill": "6e96c802be26d299a827bd93ed62ca576159444332c1ae641ac547e0ed9208d1",
+    "token_preflight_skill": "be72017e9fc7952e9a403cf90e951669496b08f4339938bc73a2829d44ef592a",
+    "evaluator": "65bc6c07d058697cda34045637d3223568cf09626cc38b8385bac46d41157480",
+    "runner": "005ed2f71ac49a8b6747dd1c43f42c8ee67315a9fb3ec8ce395f921ccf6cee3c",
+    "fixtures": "7a1b54c1eddf710e030323ab6124e525d983ef5b32a1316d1780dd12d08d4738",
+    "execution_context": "e7beb6eded81b04fae8bee2076dec7ceeefc5f55f60980aebd3b7fc4cfb9d4e0",
+    "evaluation_context": "64996161082a8b43374e911c1b5e1d2c4ba36333cd324c53cfc37caecdc2b33c"
+  },
+  "record_kind": "source",
+  "derived_from": null,
+  "hash_provenance": null,
+  "provenance": {
+    "manifest_file": "skills/harness/evals/runs/de01-armA-r2/manifest.json",
+    "problems": [],
+    "start_recorded_at": "2026-09-04T13:14:34.199053+08:00",
+    "end_recorded_at": "2026-09-04T13:22:49.558122+08:00",
+    "start_end_identical": true,
+    "trace_manifest_digest": "8ff5bb7261c8db6a141f98329af9561cc0b26b81d4c698f63f8bb6ec8d8c14d8",
+    "trace_manifest_origin": "contemporaneous",
+    "trace_manifest_origin_notes": [],
+    "run_nonce": "393456115bc313191f579a259c6d90d2",
+    "trace_manifest": {
+      "recorded_at": "2026-09-04T13:19:32.481544+08:00",
+      "algorithm": "sha256",
+      "digest": "8ff5bb7261c8db6a141f98329af9561cc0b26b81d4c698f63f8bb6ec8d8c14d8",
+      "run_nonce": "393456115bc313191f579a259c6d90d2",
+      "files": {
+        "_preflight.jsonl": "78cd1f3ece1268637b028d61bb0d62d5d10c7591021f6f4555f0b11d0b63cbc4",
+        "_preflight.meta.json": "68ac4dc743bb9cde9de67683c97a2eeaea7065051e5fe74cfeb8c7f82528f9ec",
+        "judgment__positive-1.jsonl": "3c7005b1aae5a41538ba94e0c591e41823e204628072ee216798265e76e5e2b8",
+        "judgment__positive-1.meta.json": "2dadd1780bb91b22a0297b7987a0e91b33985013d986d11d7d0379e3cf8a1d05",
+        "judgment__positive-2.jsonl": "9b94979341259372bb263db98849845cf66a47c4a04f8c343cf07fc0a675691e",
+        "judgment__positive-2.meta.json": "adfe2d4f127798206ea43de294e0e0a1c2a456f68c63bcacac4d8b2d3cfd40a1",
+        "judgment__positive-4.jsonl": "ce0f9110df4393adc21bb432574ff06f52327d386d99763884bc8305ed6bb004",
+        "judgment__positive-4.meta.json": "ddaf0f08f3f52b13aae988db43e5afb5f1521751b18d8d638eaecbc9a1a3829b",
+        "judgment__positive-5.jsonl": "f23aaaca4960779d9b2e08ed0e182fdfa8174d66854407febe8e39d4bfd6f5ad",
+        "judgment__positive-5.meta.json": "088e9ed1740c7dc7f6172ed1d60f1f3208191d15124cfbed9424c5faf25b75de"
+      }
+    }
+  },
+  "hash_method": "scripts/bundle-hash.sh — allowlist、路徑無關（相對路徑+內容 hash）、排除未列出路徑與 .DS_Store。六個互斥 domain：skill／evaluator／runner／fixtures／execution-context／evaluation-context。值取自 run-start 快照，並與 run-end 快照比對。**不同 hash_schema 的值不得直接比較**",
+  "fixture_files": [
+    "skills/harness/evals/de01/fixtures.json",
+    "skills/harness/evals/de01/routing-empty.json",
+    "skills/harness/evals/seed/.gitignore",
+    "skills/harness/evals/seed/SPEC.md",
+    "skills/harness/evals/seed/docs/api.md",
+    "skills/harness/evals/seed/src/api/client.ts",
+    "skills/harness/evals/seed/src/api/orders.ts",
+    "skills/harness/evals/seed/src/api/products.ts",
+    "skills/harness/evals/seed/src/api/users.ts",
+    "skills/harness/evals/seed/src/hooks/useCart.ts",
+    "skills/harness/evals/seed/src/utils/date.ts"
+  ],
+  "totals": {
+    "fixtures": 4,
+    "routing_pass": 0,
+    "contract_pass": 2
+  },
+  "warnings": [],
+  "results": [
+    {
+      "id": "judgment__positive-1",
+      "category": "positive",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "PASS",
+      "contract_detail": "",
+      "contract_anomaly": null,
+      "triggered": []
+    },
+    {
+      "id": "judgment__positive-2",
+      "category": "positive",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "contract_anomaly": null,
+      "triggered": []
+    },
+    {
+      "id": "judgment__positive-4",
+      "category": "positive",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "contract_anomaly": null,
+      "triggered": []
+    },
+    {
+      "id": "judgment__positive-5",
+      "category": "positive",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "PASS",
+      "contract_detail": "",
+      "contract_anomaly": null,
+      "triggered": []
+    }
+  ]
+}

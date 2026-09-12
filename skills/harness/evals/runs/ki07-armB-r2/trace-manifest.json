@@ -1,0 +1,12 @@
+{
+  "recorded_at": "2026-09-04T17:28:44.899884+08:00",
+  "algorithm": "sha256",
+  "digest": "0107133becb2ca9a2a026f8d725883c640dd425002e833ddbffcdafe9a7933e3",
+  "run_nonce": "2d53c6ce8bba3e8d3bce2ae7fa7f9462",
+  "files": {
+    "_preflight.jsonl": "e148bc696b4e1a3c8c4c9ccd264ddd69e84c45beb7679292dd202642122f4e80",
+    "_preflight.meta.json": "dee6028806537584fecc15e0e41b5f1fa4fe67f9819ea28c76096323fd13fc2a",
+    "judgment__ambiguous-1.jsonl": "8314ff8640989f5546b86deaaa577ad99ed357a4f14258f3a82d70acf280a142",
+    "judgment__ambiguous-1.meta.json": "1f844ba3877c126e3a46a7b4ac46eeb00a4fa187d8e8a9ec89df07bda686d482"
+  }
+}

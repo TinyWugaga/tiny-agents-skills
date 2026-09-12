@@ -1,0 +1,89 @@
+{
+  "manifest_version": 3,
+  "kind": "full",
+  "run_nonce": "65034b307c6e89aa776f2f57912bfd11",
+  "start": {
+    "recorded_at": "2026-09-11T22:58:06.544430+08:00",
+    "hash_schema": "v6",
+    "hashes": {
+      "dispatch_skill": "2d6c0d99b1c4ca927e2c06c82e065c389fa6a6b8ddbc325b0e9bde9bc071c4fc",
+      "judgment_skill": "93956caa84dc453f34d0f87b674de759b87059608d6d509f2f30d4d48a5f6818",
+      "token_preflight_skill": "be72017e9fc7952e9a403cf90e951669496b08f4339938bc73a2829d44ef592a",
+      "evaluator": "481c7dd69570e79ce03b300bfe9f1a2dce65c36fcf54e6bf7744eba7794fdd13",
+      "runner": "b2b4958ba9aced9828161d7c03990e3aa7eb63706057f06cc2c56610978e04b4",
+      "fixtures": "3d225afc58e479eef05efc156d599c94b57684bcd729e754411831889bad3d4f",
+      "execution_context": "e7beb6eded81b04fae8bee2076dec7ceeefc5f55f60980aebd3b7fc4cfb9d4e0",
+      "evaluation_context": "44abd795f668ee5ff4cb44cbbbf711c1b25e0b699ecd325a672bf80265abe96a"
+    },
+    "context_components": {
+      "execution_context": {
+        "rules": "165581fbafee0b999c27e5d290a7377c54a36330c337a0ac2acce39ec466836f",
+        "settings": "a89ad3df7500f358f5a4f009dd1165bcc0f12316922a2ced6a79f721fb16db04",
+        "descriptor": "e378beb1c7982c112a64517c56c3ac5c95a8741068bcb3a44300317a230d5ac5"
+      },
+      "evaluation_context": {
+        "descriptor": "ed90f46556bf2d6e38b89ca27e30b12ddd47dc6100158bc77c547e32ad2e32ba"
+      }
+    },
+    "fixture_args": [
+      "skills/discipline/judgment/evals/fixtures.json",
+      "skills/harness/evals/routing-fixtures.json",
+      "skills/harness/evals/seed"
+    ],
+    "fixture_files": [
+      "skills/discipline/judgment/evals/fixtures.json",
+      "skills/harness/evals/routing-fixtures.json",
+      "skills/harness/evals/seed/.gitignore",
+      "skills/harness/evals/seed/SPEC.md",
+      "skills/harness/evals/seed/docs/api.md",
+      "skills/harness/evals/seed/src/api/client.ts",
+      "skills/harness/evals/seed/src/api/orders.ts",
+      "skills/harness/evals/seed/src/api/products.ts",
+      "skills/harness/evals/seed/src/api/users.ts",
+      "skills/harness/evals/seed/src/hooks/useCart.ts",
+      "skills/harness/evals/seed/src/utils/date.ts"
+    ]
+  },
+  "end": {
+    "recorded_at": "2026-09-11T23:36:11.356493+08:00",
+    "hash_schema": "v6",
+    "hashes": {
+      "dispatch_skill": "2d6c0d99b1c4ca927e2c06c82e065c389fa6a6b8ddbc325b0e9bde9bc071c4fc",
+      "judgment_skill": "93956caa84dc453f34d0f87b674de759b87059608d6d509f2f30d4d48a5f6818",
+      "token_preflight_skill": "be72017e9fc7952e9a403cf90e951669496b08f4339938bc73a2829d44ef592a",
+      "evaluator": "481c7dd69570e79ce03b300bfe9f1a2dce65c36fcf54e6bf7744eba7794fdd13",
+      "runner": "b2b4958ba9aced9828161d7c03990e3aa7eb63706057f06cc2c56610978e04b4",
+      "fixtures": "3d225afc58e479eef05efc156d599c94b57684bcd729e754411831889bad3d4f",
+      "execution_context": "e7beb6eded81b04fae8bee2076dec7ceeefc5f55f60980aebd3b7fc4cfb9d4e0",
+      "evaluation_context": "44abd795f668ee5ff4cb44cbbbf711c1b25e0b699ecd325a672bf80265abe96a"
+    },
+    "context_components": {
+      "execution_context": {
+        "rules": "165581fbafee0b999c27e5d290a7377c54a36330c337a0ac2acce39ec466836f",
+        "settings": "a89ad3df7500f358f5a4f009dd1165bcc0f12316922a2ced6a79f721fb16db04",
+        "descriptor": "e378beb1c7982c112a64517c56c3ac5c95a8741068bcb3a44300317a230d5ac5"
+      },
+      "evaluation_context": {
+        "descriptor": "ed90f46556bf2d6e38b89ca27e30b12ddd47dc6100158bc77c547e32ad2e32ba"
+      }
+    },
+    "fixture_args": [
+      "skills/discipline/judgment/evals/fixtures.json",
+      "skills/harness/evals/routing-fixtures.json",
+      "skills/harness/evals/seed"
+    ],
+    "fixture_files": [
+      "skills/discipline/judgment/evals/fixtures.json",
+      "skills/harness/evals/routing-fixtures.json",
+      "skills/harness/evals/seed/.gitignore",
+      "skills/harness/evals/seed/SPEC.md",
+      "skills/harness/evals/seed/docs/api.md",
+      "skills/harness/evals/seed/src/api/client.ts",
+      "skills/harness/evals/seed/src/api/orders.ts",
+      "skills/harness/evals/seed/src/api/products.ts",
+      "skills/harness/evals/seed/src/api/users.ts",
+      "skills/harness/evals/seed/src/hooks/useCart.ts",
+      "skills/harness/evals/seed/src/utils/date.ts"
+    ]
+  }
+}

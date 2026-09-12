@@ -1,0 +1,304 @@
+{
+  "run_id": "20260901-batch11-judgment-full",
+  "recorded_at": "2026-09-01T06:13:37.515441+08:00",
+  "run_status": "INVALID",
+  "is_contract_evidence": false,
+  "invalid_reason": "1/27 筆未產生可用觀測（CLI 失敗 0）；樣本：harness-routing__boundary-1 — routing=PASS  / contract=ERROR judge 判定非合法 JSON: Extra data: line 3 column 1 (char 639)",
+  "claude_code_version": "2.1.247 (Claude Code)",
+  "subject_model": "sonnet",
+  "judge_model": "sonnet",
+  "duration_s": 2116,
+  "cli_failed": 0,
+  "cost": {
+    "preflight_usd": 0.07184,
+    "preflight_sessions": 1,
+    "subject_usd": 2.5253,
+    "judge_usd": null,
+    "subject_sessions": 27,
+    "judge_sessions": 27,
+    "total_usd": null
+  },
+  "hashes": {
+    "dispatch_bundle": "fd139f25b7e5745df7c5ab6aa1d20629e40edcb8a807f5277c11acf433eddcae",
+    "judgment_bundle": "3f4e14ce80719396f1d5e21aeb8e95276db06694a428fc4225b98c7fc0cb871e",
+    "token_preflight_bundle": "a705ca101d56f27a6ff7addc66eb6fa80375a4e6b85286422fca8463e4982de1",
+    "harness_test_suite": "bac3abd9efa7a1bb3dbcd233e608aedd3b4a185f096064589966c4fa0f46de2c"
+  },
+  "hash_method": "skills/harness/dispatch/scripts/bundle-hash.sh — allowlist、路徑無關（相對路徑+內容 hash）、排除未列出路徑與 .DS_Store；skill 模式傳 skill 目錄，suite 模式傳 collection 目錄",
+  "totals": {
+    "fixtures": 27,
+    "routing_pass": 19,
+    "contract_pass": 15
+  },
+  "results": [
+    {
+      "id": "judgment__positive-1",
+      "category": "positive",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "judgment__positive-2",
+      "category": "positive",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "judgment__positive-3",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-4",
+      "category": "positive",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "judgment__positive-5",
+      "category": "positive",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "judgment__positive-6",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__negative-1",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "judgment__negative-2",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "judgment__ambiguous-1",
+      "category": "ambiguous",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "judgment__ambiguous-2",
+      "category": "ambiguous",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "judgment__explicit_mention-1",
+      "category": "explicit_mention",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__explicit_mention-2",
+      "category": "explicit_mention",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-7",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-8",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__positive-9",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "judgment__negative-3",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "judgment__ambiguous-3",
+      "category": "ambiguous",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "judgment__explicit_mention-3",
+      "category": "explicit_mention",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "harness-routing__handoff-1",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": [
+        "dispatch"
+      ]
+    },
+    {
+      "id": "harness-routing__boundary-1",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "ERROR",
+      "contract_detail": "judge 判定非合法 JSON: Extra data: line 3 column 1 (char 639)",
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "harness-routing__boundary-2",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": [
+        "judgment"
+      ]
+    },
+    {
+      "id": "harness-routing__boundary-3",
+      "category": "negative",
+      "routing": "FAIL",
+      "routing_detail": "judgment: 預期觸發，實際未觸發",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__dispatch-absent-1",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "（另有失敗的 Skill 呼叫，不計入觸發: dispatch）",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__dispatch-absent-2",
+      "category": "negative",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__judgment-absent-1",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": []
+    },
+    {
+      "id": "harness-routing__agent-unavailable-1",
+      "category": "positive",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "FAIL",
+      "contract_detail": "",
+      "triggered": [
+        "dispatch"
+      ]
+    },
+    {
+      "id": "harness-routing__ambiguous-1",
+      "category": "ambiguous",
+      "routing": "PASS",
+      "routing_detail": "",
+      "contract": "PASS",
+      "contract_detail": "",
+      "triggered": [
+        "judgment"
+      ]
+    }
+  ]
+}
