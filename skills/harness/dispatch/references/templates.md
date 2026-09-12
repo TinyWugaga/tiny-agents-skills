@@ -111,15 +111,23 @@ git diff --quiet HEAD -- <path>          # 同時涵蓋 staged 與 unstaged 差�
 ⚠️ **內容 hash 必須路徑無關**。不要用 `find … | xargs shasum | shasum` 這種寫法——
 `shasum` 的輸出含絕對路徑,派工方經 symlink 算、驗收方經實體路徑算就會得到不同值,
 驗收會卡在版本綁定階段直接中止(本專案實際踩過)。
-skill bundle 一律用現成腳本:
+**本 skill 不再自帶 hash 腳本。** 腳本原本放在 `dispatch/scripts/` 下,而 `scripts/**`
+屬於 skill bundle 的 allowlist——改一次量測工具就會改變 dispatch 自己的 identity,
+把 evaluator 工具混進 runtime skill 的識別範圍。工具已移到 repo 層級。
 
-```bash
-skills/harness/dispatch/scripts/bundle-hash.sh <skill 目錄>
-```
+- **在 tiny-agents-skills repo 內**:用 root 腳本。
+
+  ```bash
+  scripts/bundle-hash.sh skill <skill 目錄>
+  ```
+
+- **在其他專案**(經 `npx skills` 安裝的 standalone dispatch 不含該檔):用該專案自己的
+  版本標記工具。無論用哪一個,**把精確指令原文與 `hash_schema_version` 一併寫進派工單的
+  「版本標記」欄**,讓驗收方能重算比對。沒有 schema 版本的 hash 不可跨批比較——
+  演算法或 allowlist 一改,同一份內容就會得到不同值,而那個差異看起來跟內容變更一模一樣。
 
 其他產出物要自己算時,同樣以「**相對路徑 + 各檔內容 hash**」的組合為摘要對象,
-不要把絕對路徑餵進摘要。**派工方與驗收方必須用同一個腳本或同一段指令**,
-並把該指令原文寫進派工單的「版本標記」欄,讓驗收方能重算比對。
+不要把絕對路徑餵進摘要。**派工方與驗收方必須用同一個工具、同一個 schema 版本**。
 
 **絕對不給的一項**:執行者的推理過程。不提供、也不索取——這是 fresh-context 驗證的前提,
 不是遺漏。
