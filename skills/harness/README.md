@@ -59,7 +59,6 @@ fixture 執行機制、evals 分層、identity domain（hash schema v6）、prov
 [develop 的 harness README](https://github.com/TinyWugaga/tiny-agents-skills/blob/develop/skills/harness/README.md)、
 [STATUS.md](https://github.com/TinyWugaga/tiny-agents-skills/blob/develop/skills/harness/evals/STATUS.md)、
 [KNOWN-ISSUES.md](https://github.com/TinyWugaga/tiny-agents-skills/blob/develop/skills/harness/evals/KNOWN-ISSUES.md)。
-`develop` 尚未推送到遠端，上述連結推送後才會生效。
 
 本分支保留 [`scripts/bundle-hash.sh`](../../scripts/bundle-hash.sh)，因為
 `dispatch/references/templates.md` 仍指示在本 repo 內用它計算 skill hash。

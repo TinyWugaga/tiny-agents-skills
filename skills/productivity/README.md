@@ -15,7 +15,7 @@ skill(如各平台內建的 doc-coauthoring)的範圍。與 `judgment` 不重疊
 
 `grill-me/evals/fixtures.json` 與其 schema 說明只在 `develop` 分支,見
 [develop 的 productivity README](https://github.com/TinyWugaga/tiny-agents-skills/blob/develop/skills/productivity/README.md)。
-`develop` 尚未推送到遠端,該連結推送後才會生效。安裝內容來自 `main` 不代表已驗收或已發布。
+安裝內容來自 `main` 不代表已驗收或已發布。
 
 ## Source of truth
 

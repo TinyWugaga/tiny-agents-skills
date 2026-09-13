@@ -14,7 +14,7 @@
 
 `main` 代表安裝內容，不代表所有 skill 已驗收通過，也不代表已發布。目前已知限制：
 
-- Batch 23b（`judgment` 的 KI-02／14／15／21 修正）已暫停：已完成的語意驗收不重開，但修正後的行為重跑證據仍為零，相關 KI 維持未完成，`judgment` 的這部分行為尚未完成驗收。
+- Batch 23b 已暫停（涉及 `judgment` 的 KI-02／14／15／21 等修正；完整範圍以 `develop` 的 STATUS／KNOWN-ISSUES 為準）：已完成的語意驗收不重開，但修正後的行為重跑證據仍為零，相關 KI 維持未完成，`judgment` 的這部分行為尚未完成驗收。
 - 未完成的 KI 與發布 gate 維持原狀；有執行紀錄不代表發布 gate 已通過。
 
 開發、測試、狀態與證據入口都在 `develop`：
@@ -22,8 +22,6 @@
 [開發規範測試計畫](https://github.com/TinyWugaga/tiny-agents-skills/blob/develop/tests/agent-instructions.md)、
 [harness STATUS.md](https://github.com/TinyWugaga/tiny-agents-skills/blob/develop/skills/harness/evals/STATUS.md)、
 [harness KNOWN-ISSUES.md](https://github.com/TinyWugaga/tiny-agents-skills/blob/develop/skills/harness/evals/KNOWN-ISSUES.md)。
-
-> `develop` 尚未推送到遠端；本檔與各 collection README 中指向 `develop` 的連結，推送後才會生效。
 
 ## 平台狀態
 
@@ -33,7 +31,7 @@
 | 本次發布支援平台 | 在該次發布工作單中固定的承諾範圍；必須逐平台完成適用 fixture 驗證，不能為了通過移除失敗平台 |
 | 已驗證平台／版本 | 以實際紀錄中的平台、session、受測 identity、案例與結果為準；不得外推到其他版本或平台 |
 
-| Collection | 設計目標與限制 | 驗證證據入口（`develop`，推送後生效） |
+| Collection | 設計目標與限制 | 驗證證據入口（`develop`） |
 |---|---|---|
 | `creative/` | Claude、Codex 等可載入 skill 的 agentic session；所需繪圖能力依各 skill 契約 | 依各 skill 的實測紀錄確認；本 README 未宣稱完成逐平台驗證 |
 | `discipline/` | Claude、Codex 等可載入 skill 的 agentic session | judgment 的部分驗證見 [STATUS.md](https://github.com/TinyWugaga/tiny-agents-skills/blob/develop/skills/harness/evals/STATUS.md)，結果不能推及整個 collection |
