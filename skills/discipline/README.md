@@ -17,11 +17,14 @@
 被載入,由 judgment 依當前環境能力(可派發 subagent、只能單一 context、或請使用者開新對話)
 決定怎麼用它。不對外單獨部署,不出現在任何平台的 skill 清單裡。
 
-## Fixture schema
+## 開發、測試與證據
 
-兩份 `evals/fixtures.json` 自 v2.0 起移除頂層 `canonical_name` 與每筆 fixture 的 `platform`,
-並將 `coverage` 改為各檔 `field_definitions` 定義的固定值。從 v1.0 遷移時刪除前述欄位,
-再依各 skill 的 coverage 定義更新既有值。
+兩份 `evals/fixtures.json` 與其 schema 說明只在 `develop` 分支,見
+[develop 的 discipline README](https://github.com/TinyWugaga/tiny-agents-skills/blob/develop/skills/discipline/README.md)。
+`develop` 尚未推送到遠端,該連結推送後才會生效。
+
+`judgment` 的 Batch 23b 修正(KI-02／14／15／21)已暫停:已完成的語意驗收不重開,但行為重跑
+證據仍為零,這部分行為尚未完成驗收。安裝內容來自 `main` 不代表已驗收或已發布。
 
 ## Source of truth
 
@@ -35,7 +38,7 @@ runtime skill 內文不重複安裝方式、canonical name 或 source-of-truth �
 ## 安裝與更新
 
 `token-preflight/` 與 `judgment/` 各自是一個完整、獨立的 skill 資料夾(`SKILL.md` + 選用的
-`references/`、`evals/`)。安裝這兩個資料夾,不要安裝外層 `discipline/`,也不要把
+`references/`);安裝內容不含 `evals/`。安裝這兩個資料夾,不要安裝外層 `discipline/`,也不要把
 `judgment/references/verifier.md` 當成獨立 skill 安裝。
 
 ### Codex 與 Claude Code

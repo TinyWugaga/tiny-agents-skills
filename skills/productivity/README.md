@@ -11,10 +11,11 @@
 skill(如各平台內建的 doc-coauthoring)的範圍。與 `judgment` 不重疊:`judgment` 判斷任務
 何時算完成、何時該停,`grill-me` 只在開工前釐清決策。
 
-## Fixture schema
+## 開發與測試
 
-`grill-me/evals/fixtures.json` 使用與 `discipline` 相同的 schema 2.0:無頂層 `canonical_name`、
-每筆 fixture 無 `platform`,`coverage` 取自該檔 `field_definitions` 定義的固定值。
+`grill-me/evals/fixtures.json` 與其 schema 說明只在 `develop` 分支,見
+[develop 的 productivity README](https://github.com/TinyWugaga/tiny-agents-skills/blob/develop/skills/productivity/README.md)。
+`develop` 尚未推送到遠端,該連結推送後才會生效。安裝內容來自 `main` 不代表已驗收或已發布。
 
 ## Source of truth
 
@@ -24,7 +25,7 @@ runtime skill 內文不重複安裝方式、canonical name 或 source-of-truth �
 
 ## 安裝與更新
 
-`grill-me/` 本身是一個完整、獨立的 skill 資料夾(`SKILL.md` + `evals/`)。安裝這個資料夾,
+`grill-me/` 本身是一個完整、獨立的 skill 資料夾(`SKILL.md`);安裝內容不含 `evals/`。安裝這個資料夾,
 不要安裝外層 `productivity/`。
 
 ### Codex 與 Claude Code
