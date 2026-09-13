@@ -5,6 +5,7 @@
 
 開發規則以 [AGENTS.md](AGENTS.md) 為準；[CLAUDE.md](CLAUDE.md) 只匯入該檔。
 新規範的測試範圍與情境見 [開發規範測試計畫](tests/agent-instructions.md)。
+分支：`develop` 是完整開發來源；`main` 只含安裝內容，同步規則見 [AGENTS.md](AGENTS.md)「分支與同步」。
 
 ## 平台狀態
 

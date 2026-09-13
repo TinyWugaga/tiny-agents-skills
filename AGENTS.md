@@ -1,6 +1,6 @@
 # Skill 開發規範
 
-版本：v1.1（2026-09-11）
+版本：v1.2（2026-09-13）
 
 ## 適用與載入
 
@@ -124,3 +124,10 @@
 - 回報區分「實作完成」「指定範圍驗證完成」「可發布」「已部署」；原需求若包含發布，實作完成只是里程碑。
 - 交付列出變更檔案、支援平台與 session、實際檢查、未驗證項目與剩餘 blocker；不自行更改既有 ledger 的 DONE 定義或接受風險。
 - 維護本檔時，改變規則行為須進位版本；純錯字與排版不進位。`CLAUDE.md` 始終只匯入本檔。
+
+## 分支與同步
+
+- `develop` 是完整開發來源，保留 skill、evals、測試工具、契約、帳本與歷史證據；新開發與測試都在 `develop` 進行。本檔提及的 `evals/`、`tests/` 及 `scripts/` 工具只保證存在於 `develop`。
+- `main` 是安裝內容分支，只放 runtime skill、plugin 安裝檔、`AGENTS.md`、`CLAUDE.md`、必要 README，以及 runtime 仍引用的 `scripts/bundle-hash.sh`。內容在 `main` 不代表已驗收或已發布。
+- 同步時先選定 `develop` 的來源 commit，只把已核准的安裝內容同步到 `main`；同步後用 `scripts/bundle-hash.sh skill` 核對 `main` 與來源 commit 的每個 runtime skill 內容 hash。
+- 不把 `develop` 整支 merge 進 `main`，避免測試檔回流；不以 `.gitignore` 取代分支內容管理。
