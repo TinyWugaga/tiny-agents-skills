@@ -236,8 +236,8 @@ case_run "改 raw trace（.jsonl）"             skills/harness/evals/runs/trace
 case_run "改 raw trace 旁證（.meta.json）"    skills/harness/evals/runs/tracecase/raw/suite__case-1.meta.json trace_manifest
 
 # --- 都不該動任何 domain ---
-case_run "改 judge_selftest.py（測試本身）"   skills/harness/evals/judge_selftest.py none
-case_run "改 record_selftest.py（測試本身）"  skills/harness/evals/record_selftest.py none
+case_run "改 judge_selftest.py（測試本身）"   skills/harness/evals/selftests/judge_selftest.py none
+case_run "改 record_selftest.py（測試本身）"  skills/harness/evals/selftests/record_selftest.py none
 case_run "改 STATUS.md（紀錄文件）"           skills/harness/evals/STATUS.md         none
 case_run "改 KNOWN-ISSUES.md（紀錄文件）"     skills/harness/evals/KNOWN-ISSUES.md   none
 case_run "新增其他 run 的結果檔"              -NEW-  none  skills/harness/evals/runs/x/raw/a.jsonl

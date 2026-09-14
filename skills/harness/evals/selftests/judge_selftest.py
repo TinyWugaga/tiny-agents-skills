@@ -14,7 +14,8 @@ repo 內既有的三份 run trace 每一筆 assistant 事件的 parent_tool_use_
 """
 import importlib.util, os, sys, tempfile
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
+_HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _HERE)
 _spec = importlib.util.spec_from_file_location("judge", os.path.join(_HERE, "judge.py"))
 judge = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(judge)

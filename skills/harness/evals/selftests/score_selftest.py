@@ -12,7 +12,7 @@ suite hash 的情況下被改掉，這個測試就沒有版本綁定的意義。
 """
 import importlib.util, json, os, sys, tempfile
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
+_HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _spec = importlib.util.spec_from_file_location("score", os.path.join(_HERE, "score.py"))
 score = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(score)

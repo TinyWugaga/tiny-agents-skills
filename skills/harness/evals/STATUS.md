@@ -2329,3 +2329,26 @@ Owner 於 2026-09-11 接受工作單 r3 所列的預算與證據限制，授權�
 - **舊證據保留在原版本，不重開既有驗收。** 範圍包括 `runs/b23b-J-r1/`、repo 外的 `harness-baselines/` 與 `harness-proposals/`。
   與 Batch 23b 無關的獨立工作可以繼續。
 - **暫停不代表可以搬動、刪除或改名凍結檔案，或任何仍被引用的證據。**
+
+## eval 首批目錄整理：自測搬移（2026-09-14，Owner 授權）
+
+**Owner 授權搬移 4 支受歷史契約引用的自測，並接受現行樹與 repo 外 pre-b23b baseline 因此多出對應的路徑差異。**
+歷史契約與 repo 外 baseline 都不修改。本段不改動任何 disposition、action status 或 gate，Batch 23b 繼續暫停。
+方案見 [`../../../docs/plans/eval-directory-migration.md`](../../../docs/plans/eval-directory-migration.md)。
+
+- **遷移前基準 `C0`：** `f219b121dcb87166a2a374c790ffbf84caa40fc2`，只含 evals README 與遷移方案。
+  `C0` 只保存遷移前的已追蹤內容，不保證符合各歷史契約綁定的版本。
+- **路徑對照**（`skills/harness/evals/` 下）：
+
+  | 原路徑 | 新路徑 |
+  |---|---|
+  | `judge_selftest.py` | `selftests/judge_selftest.py` |
+  | `score_selftest.py` | `selftests/score_selftest.py` |
+  | `record_selftest.py` | `selftests/record_selftest.py` |
+  | `transport_selftest.py` | `selftests/transport_selftest.py` |
+
+  本檔較早段落（例如「要接手的話」）裡的舊路徑指令屬於歷史紀錄，不改寫；現行指令見 [`README.md`](README.md)「常用零成本檢查」。
+- **`acceptance-r2-regression.py` 留在原位，** 和 `ACCEPTANCE-r2.md` 放在一起，兩者的內容與路徑都不變。
+  它在 `C0` 的基線就回傳 FAIL，原因是它硬編了 r2 當時的 `record.py` SHA-256、工作區 34 筆變更、PATH 上的 python3 3.7.9。
+  它綁定歷史環境，不列為本批的搬移 gate，本批也不修改、不重跑。
+- **既有歷史失配：** `record_selftest.py` 在搬移前就與 round8 契約第 141 行的 SHA-256 不符，不是搬移造成的，`C0` 也無法消除。

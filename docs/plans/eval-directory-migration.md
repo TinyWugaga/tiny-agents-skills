@@ -4,10 +4,11 @@
 - 盤點基準：branch `chore/organize-eval-docs`，HEAD `8004bbe07e2d21866486554ac77d155b37342ab7`，唯一的未提交修改是 `skills/harness/evals/README.md`。
 - 範圍：`skills/harness/evals/`。各 skill 專屬的 `evals/fixtures.json` 維持在原 skill 內。
 - 性質：本檔只是方案，不是授權。本檔撰寫時沒有搬移任何檔案。
+- Owner 決定（2026-09-14）：`C0` = `f219b121dcb87166a2a374c790ffbf84caa40fc2`。首批由 5 支縮為 4 支：`acceptance-r2-regression.py` 在 `C0` 的基線就已回傳 FAIL，屬於綁定歷史環境的工具，留在原位（見 §3.1）。
 
 ## 1. 結論
 
-- **推薦首批只做一件事：把 5 支零成本自測移進 `evals/selftests/`。** 這批不改變任何 identity 值，也不必做行為重跑。但這 5 個檔案被凍結契約以「路徑＋SHA-256」綁定，所以需要 Owner 明確授權（見 §5）。
+- **首批只做一件事：把 4 支零成本自測移進 `evals/selftests/`。** 這批不改變任何 identity 值，也不必做行為重跑。但這 4 個檔案被凍結契約以「路徑＋SHA-256」綁定，所以需要 Owner 明確授權（見 §5）。
 - **歷史證據留在原位（§4 的選項 A）。** 遷移前 commit `C0` 只保存遷移前的已追蹤內容，用來還原被搬走的檔案。它不保證與各歷史契約綁定的版本相符（見 §4「C0 的保證範圍」）。
 - **現行工具、整合案例、`runs/`、`de01/` 都不搬。** 這些檔案的路徑會進入 identity 或執行入口，搬移收益小於重建 identity 的成本（見 §3.3）。
 
@@ -32,7 +33,12 @@
 | `score_selftest.py` | `selftests/score_selftest.py` |
 | `record_selftest.py` | `selftests/record_selftest.py` |
 | `transport_selftest.py` | `selftests/transport_selftest.py` |
-| `acceptance-r2-regression.py` | `selftests/acceptance-r2-regression.py` |
+
+**`acceptance-r2-regression.py` 留在原位**，和它讀取的 `ACCEPTANCE-r2.md` 放在一起，內容和路徑都不變。
+
+- 它在 `C0` 的基線就回傳 FAIL，repo 根目錄與其他 cwd 兩種執行方式的 FAIL 清單相同。
+- 失敗原因是它硬編了 r2 當時的狀態：`record.py` 的 SHA-256（`:21`）、工作區有 34 筆變更（`:23`）、PATH 上的 python3 為 3.7.9（`:419`）。
+- 因此它綁定歷史環境，不列為本批必須通過的搬移 gate。本批不修改它，不重跑它，也不改用「FAIL 清單相同」來驗收。
 
 目錄名用 `selftests/`，因為 repo 根目錄已經有 `tests/`（目前含 `tests/agent-instructions.md`），避免兩者混淆。
 
@@ -40,13 +46,13 @@
 
 - **執行入口**：
   - `judge_selftest.py:17-18`、`score_selftest.py:15-16`、`transport_selftest.py:10-11`：模組路徑改為上一層的 `judge.py`／`score.py`／`transport.py`。
+  - `judge_selftest.py` 另外在 `:80` 用 `from judge import`。它原本靠 Python 自動把腳本所在目錄放進 `sys.path[0]`，所以要補一行 `sys.path.insert(0, _HERE)`，讓 import 的解析順序和搬移前相同。這一處在首批實作時才發現。
   - `record_selftest.py:21-23`：`sys.path` 改為插入上一層目錄。
-  - `acceptance-r2-regression.py`：`:18` 的 ROOT 深度；`:19` 的 `ACCEPTANCE-r2.md` 與 `:20` 的 `record.py` 改指上一層；`:366` 傳給 driver 的 `HERE` 改成 evals 目錄。實作時對全檔 grep `HERE`，逐一確認沒有遺漏。
   - `scripts/hash-domain-selftest.sh:239-240`：兩個 case 的目標路徑改為 `selftests/`。這兩個 case 斷言「改 selftest 不動任何 domain」，搬移後仍應回 `none`。
 - **含路徑 identity**：無。evaluator 以明列清單計算（`bundle-hash.sh:174-176`），不含 `*_selftest.py`；`skills/harness/README.md:132` 也寫明排除。
-- **內容 hash**：round5–8 契約以「路徑＋SHA-256」綁定這 5 支（例如 `verification-contracts/20260907-round8.md:139-143`）。實測時 `judge`、`score`、`transport` 三支 selftest 與 `acceptance-r2-regression` 仍與 round8 的值相符，`record_selftest.py` 已經不同。搬移並修改入口後，遷移前內容只能從 `C0` 取回，契約不修改。
+- **內容 hash**：round5–8 契約以「路徑＋SHA-256」綁定這 4 支，以及留在原位的 `acceptance-r2-regression.py`（例如 `verification-contracts/20260907-round8.md:139-143` 共五筆）。實測時 `judge`、`score`、`transport` 三支 selftest 與 `acceptance-r2-regression` 仍與 round8 的值相符，`record_selftest.py` 已經不同。4 支搬移並修改入口後，遷移前內容只能從 `C0` 取回，契約不修改。
   - `record_selftest.py` 的失配在搬移前就存在，不是搬移造成的，`C0` 也無法消除。
-  - 本方案沒有搜尋與 round8:141 相符的歷史版本，這項標示為未驗證。repo 外的 `~/.claude/harness-baselines/20260911-pre-b23b-rerun/repo-files.sha256` 會多出 5 條路徑差異。
+  - 本方案沒有搜尋與 round8:141 相符的歷史版本，這項標示為未驗證。repo 外的 `~/.claude/harness-baselines/20260911-pre-b23b-rerun/repo-files.sha256` 會多出 4 條路徑差異。
 - **純文字引用**：
   - `evals/README.md`（行號以 SHA-256 `e6e5b5a0…00a2` 的版本為準）要更新三處：
     - `:45` 目錄樹。
@@ -67,7 +73,7 @@
 
 - 即使選 B，`de01/` 與 `runs/` 仍然不搬，理由見 §3.3。
 - 選 B 要改的東西：
-  - `selftests/acceptance-r2-regression.py` 的 `ACCEPTANCE` 路徑。
+  - `acceptance-r2-regression.py`（首批後仍在原位）的 `ACCEPTANCE` 路徑。
   - `scripts/LEDGER-CHECK-SPEC.md:30` 規定的紀錄路徑慣例。這是規則變更，需要 Owner。
   - 現行帳本中的連結：STATUS 10 處、KNOWN-ISSUES 6 處、VERIFICATION-LOG 11 處。改完要重跑 `ledger_check`。
   - `evals/README.md` 的歷史證據索引。
@@ -91,7 +97,7 @@
 
 | | A：歷史留原位，只整理現行檔（推薦） | B：先保存可重現舊路徑的快照，再搬歷史證據 |
 |---|---|---|
-| 已追蹤內容 | 仍在原路徑；首批移走的 5 支 selftest 從 `C0` 還原遷移前內容 | 全部從 `C0` 還原遷移前內容 |
+| 已追蹤內容 | 仍在原路徑；首批移走的 4 支 selftest 從 `C0` 還原遷移前內容 | 全部從 `C0` 還原遷移前內容 |
 | ignored raw | 不移動，沿用 `trace-manifest.json` 與 `evidence.sha256` 驗證（兩者都用 run 內相對路徑） | 同 A，前提是 `runs/` 不搬。若將來要搬 `runs/`：整個目錄搬移時 raw 可能一起移動，但 Git commit 不保存 raw，必須另行備份（例如 tar）並用 SHA-256 清單驗證完整性 |
 | repo 外 baseline、proposal 複本 | 路徑與現行樹大致一致 | 路徑只與 `C0` 的樹一致；內容是否相符要逐檔核對 |
 | 凍結契約的重驗 | 大多數舊路徑仍能在現行樹上找到；綁定值是否相符要逐檔比對 | 舊路徑只能在 `C0` 的 worktree 上找到；同樣要逐檔比對，`C0` 不保證相符 |
@@ -124,7 +130,7 @@
 | 範圍 | 可否在目前規則內進行 |
 |---|---|
 | 本方案、README 導覽等純文件工作 | 可以。仍需依 AGENTS.md 填寫工作單 |
-| 首批 selftest 搬移 | 需要 Owner 明確授權。這 5 支被 round5–8 凍結契約以「路徑＋SHA-256」綁定，並列在 pre-b23b baseline 中 |
+| 首批 selftest 搬移 | 需要 Owner 明確授權。這 4 支被 round5–8 凍結契約以「路徑＋SHA-256」綁定，並列在 pre-b23b baseline 中。已於 2026-09-14 授權 |
 | 選項 B、修改 `LEDGER-CHECK-SPEC.md` 的路徑慣例 | 需要 Owner 授權，並需對 STATUS:2331 做出裁決 |
 | 搬移 runner、evaluator、案例或 `runs/` | 需要 Owner 授權，並涉及 hash schema v7、重建 identity 與 Batch 23b 預期 identity 的處置。本方案不推薦 |
 
@@ -133,10 +139,10 @@ Batch 23b 結案或恢復，都不會自動解除任何 baseline 或凍結契約
 ## 6. 首批實作單
 
 ```text
-交付：5 支自測移到 evals/selftests/；停在實作與零成本驗證，不發布。
-範圍：上列 5 支、scripts/hash-domain-selftest.sh:239-240、evals/README.md、STATUS.md（僅在 marker 外追加）；develop 系 branch；Claude Code。
-驗收：下列零成本檢查全部通過；identity 值與 C0 相同；round8:139-143 的歷史比對結果在搬移前後一致（預期 4 符、record_selftest.py 不符——既有限制，非搬移造成，C0 不消除）。
-不做：工具、案例、runs、de01、歷史證據的搬移；hash schema 變更；付費測試。
+交付：4 支自測移到 evals/selftests/；停在實作與零成本驗證，不發布。
+範圍（本批 diff 允許清單）：上列 4 支的 rename 與載入路徑修改；scripts/hash-domain-selftest.sh:239-240；skills/harness/evals/README.md；skills/harness/evals/STATUS.md（僅在 marker 外追加）；docs/plans/eval-directory-migration.md（本方案）。develop 系 branch；Claude Code。
+驗收：下列零成本檢查全部通過；identity 值與 C0 相同；acceptance-r2-regression.py 與 ACCEPTANCE-r2.md 的路徑和內容都不變；round8:139-143 五筆歷史比對（涵蓋 4 支搬移檔與原位的 regression）在搬移前後一致（預期 4 符、record_selftest.py 不符——既有限制，非搬移造成，C0 不消除）。
+不做：acceptance-r2-regression.py 的搬移、修改或重跑；其他工具、案例、runs、de01、歷史證據的搬移；hash schema 變更；付費測試。
 驗證成本：只做零成本檢查，無付費呼叫。
 停止：見下方停止條件。
 裁決者：Owner。
@@ -147,10 +153,11 @@ Batch 23b 結案或恢復，都不會自動解除任何 baseline 或凍結契約
 0. 前置：
    - 工作區乾淨（`git status --porcelain --untracked-files=all` 為空）。
    - 取得 `C0`（遷移前 commit，需包含本 branch 目前的 README 修改，因此需要 commit 授權）。
-   - 在 `C0` 上跑一次全部零成本檢查作為基線，自測目錄用舊路徑 `"$REPO/skills/harness/evals"`。任一項已經失敗就停止，那不是遷移造成的問題。
+   - 在 `C0` 上跑一次全部零成本檢查作為基線，自測目錄用舊路徑 `"$REPO/skills/harness/evals"`。任一必要項已經失敗就停止，那不是遷移造成的問題。`acceptance-r2-regression.py` 在 `C0` 已知失敗，不列為必要項（見 §3.1）。
+   - 記錄 `acceptance-r2-regression.py` 與 `ACCEPTANCE-r2.md` 的 SHA-256。
    - 執行 `hist_check live > "$OUT/hist-before.txt"`，記錄搬移前的歷史比對結果（函式定義見下方）。
    - 記錄三項 identity 值：`bundle-hash.sh evaluator skills/harness`、`bundle-hash.sh runner skills/harness`，以及 `bundle-hash.sh fixtures` 對 `skills/harness/dispatch/evals/fixtures.json`、`skills/harness/evals/routing-fixtures.json`、`skills/harness/evals/seed` 的值。
-1. 用 `git mv` 移動 5 支檔案。只做 §3.1 列出的入口修改。
+1. 用 `git mv` 移動 4 支檔案。只做 §3.1 列出的入口修改。
 2. 更新 `evals/README.md`；在 `STATUS.md` 的 marker 區外追加遷移對照（含 `C0`、原路徑 → 新路徑）。
 
 **零成本驗證**（必做）
@@ -163,22 +170,24 @@ C0=<步驟 0 記錄的 commit hash>
 OUT=<repo 外的暫存目錄，存放搬移前後的歷史比對結果>
 cd "$REPO"
 
-# 五支自測逐支執行並記錄各自的 exit code；任一支失敗，函式回傳 1，不會被後面的成功蓋掉
+# 4 支搬移的自測逐支執行並記錄各自的 exit code；任一支失敗，函式回傳 1，不會被後面的成功蓋掉
+# acceptance-r2-regression.py 在 C0 已知失敗，不在這個 gate 內，也不重跑（見 §3.1）
 run_selftests() {   # $1 = 自測所在目錄的絕對路徑，$2 = 執行時的 cwd
   rc=0
-  for f in judge_selftest.py score_selftest.py record_selftest.py transport_selftest.py acceptance-r2-regression.py; do
+  for f in judge_selftest.py score_selftest.py record_selftest.py transport_selftest.py; do
     if (cd "$2" && python3 -B "$1/$f"); then echo "ok   $f"; else echo "FAIL $f (rc=$?, cwd=$2)"; rc=1; fi
   done
   return "$rc"
 }
 SELF="$REPO/skills/harness/evals/selftests"  # 步驟 0 基線改用 "$REPO/skills/harness/evals"
 CWD2=$(mktemp -d)
-run_selftests "$SELF" "$REPO"; rc_root=$?    # cwd = repo 根目錄，五支都跑
-run_selftests "$SELF" "$CWD2"; rc_other=$?   # cwd = 其他目錄，五支都跑
+run_selftests "$SELF" "$REPO"; rc_root=$?    # cwd = repo 根目錄，4 支都跑
+run_selftests "$SELF" "$CWD2"; rc_other=$?   # cwd = 其他目錄，4 支都跑
 rmdir "$CWD2"                                # 失敗代表自測在 cwd 留下檔案，需要調查
 [ "$rc_root" -eq 0 ] && [ "$rc_other" -eq 0 ] # 任一非零即驗收失敗
+git diff --quiet "$C0" -- skills/harness/evals/acceptance-r2-regression.py skills/harness/evals/ACCEPTANCE-r2.md   # 原位檔：路徑與內容都未變
 
-git diff -M --stat "$C0"                     # 只出現 5 筆 rename 與 §3.1 列出的檔案
+git diff -M --stat "$C0"                     # 只出現工作單「範圍」允許清單內的變更：4 筆 rename，以及 hash-domain-selftest.sh、evals README、STATUS、本方案
 git diff -M "$C0" -- skills/harness/evals    # rename 檔的差異只含入口路徑行
 sh scripts/hash-domain-selftest.sh           # 維持 36 個案例通過
 sh scripts/run-provenance-selftest.sh        # 檔頭自述零成本；結果與基線一致
@@ -204,7 +213,7 @@ diff "$OUT/hist-before.txt" "$OUT/hist-after.txt"   # 必須無差異；預期 4
 
 **回復方式**
 
-- commit 前：`git restore --source="$C0" --staged --worktree -- skills/harness/evals scripts/hash-domain-selftest.sh`，再刪除空的 `selftests/`。
+- commit 前：先以 `git status` 確認沒有本批以外的變更。接著只撤回本批路徑：`git mv` 把 4 支移回原位，再執行 `git restore --source="$C0" --staged --worktree --` 4 個原路徑、`scripts/hash-domain-selftest.sh`、`skills/harness/evals/README.md`、`skills/harness/evals/STATUS.md`，最後刪除空的 `selftests/`。不要對整個目錄 restore。
 - commit 後：`git revert <遷移 commit>`。
 - 兩種都不動 ignored 資料。
 
@@ -213,13 +222,13 @@ diff "$OUT/hist-before.txt" "$OUT/hist-after.txt"   # 必須無差異；預期 4
 - 任一 identity 值改變：立即回復並停止。
 - `hist-before.txt` 與 `hist-after.txt` 不一致：立即回復並停止。
 - 基線通過的檢查在搬移後失敗：同一問題只修入口路徑，最多 2 輪（AGENTS.md），仍失敗就回復並回報。
-- diff 出現清單外的檔案，或需要修改任何凍結契約、紀錄、baseline：停止。
+- diff 出現工作單「範圍」允許清單以外的檔案，或需要修改任何凍結契約、紀錄、baseline：停止。
 - 全部通過即結束本批，不順勢開始第二批。
 
 ## 7. 需要 Owner 決定的事項
 
-1. 是否授權首批：搬移 5 支受 round5–8「路徑＋SHA-256」綁定的 selftest，並接受 pre-b23b baseline 因此多出 5 條路徑差異。
-2. 是否授權建立 `C0` commit（含目前的 README 修改），作為遷移前已追蹤內容的還原基準。`C0` 不保證符合各歷史契約綁定的版本。
-3. 遷移對照要追加在 `STATUS.md`，還是只寫在 `evals/README.md`。
-4. 歷史證據採 A（推薦）或 B。若採 B，需一併裁決 `LEDGER-CHECK-SPEC.md:30` 的修改，以及 STATUS 歷史連結失效的處理方式。
-5. 是否確認 runner、evaluator、整合案例、`runs/`、`de01/` 長期留在原位；若不確認，另立工作包評估 hash schema v7。
+1. 已決定（2026-09-14）：授權首批搬移 4 支受 round5–8「路徑＋SHA-256」綁定的 selftest，並接受 pre-b23b baseline 因此多出 4 條路徑差異；`acceptance-r2-regression.py` 留在原位。
+2. 已決定：`C0` = `f219b121dcb87166a2a374c790ffbf84caa40fc2`，只含 README 與本方案，作為遷移前已追蹤內容的還原基準。`C0` 不保證符合各歷史契約綁定的版本。
+3. 已決定：遷移對照追加在 `STATUS.md` 的 marker 區外。
+4. 已決定：歷史證據採 A。
+5. 已決定：runner、evaluator、整合案例、`runs/`、`de01/` 本批不搬，但不作永久留在原位的決定。

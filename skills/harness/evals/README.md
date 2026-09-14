@@ -42,7 +42,8 @@ evals/
 │   ── 工具 ──
 ├── run-suite.sh  run-fixture.sh  transport.py  manifest.py     runner
 ├── score.py  judge.py  record.py                              evaluator
-├── *_selftest.py  acceptance-r2-regression.py                 零成本自測
+├── selftests/                   零成本自測（judge、score、record、transport）
+├── acceptance-r2-regression.py  r2 regression；綁定歷史環境，與 ACCEPTANCE-r2.md 同留原位
 │   ── 案例 ──
 ├── routing-fixtures.json        harness-routing fixture（其他 suite 的 fixture 在各 skill 的 evals/）
 ├── seed/                        fixture 的前置產出物
@@ -70,8 +71,8 @@ evals/
 | 工具：runner | `run-suite.sh`、`run-fixture.sh` | 建立隔離環境、依 fixture 起受測 session |
 | 工具：runner | `transport.py`、`manifest.py` | prompt 單行傳輸；run 前後的 identity 快照與 trace manifest |
 | 工具：evaluator | `score.py`、`judge.py`、`record.py` | routing 判定、LLM judge 契約判定、run record |
-| 工具：自測 | `judge_selftest.py`、`score_selftest.py`、`record_selftest.py`、`transport_selftest.py` | 零成本自測 |
-| 工具：自測 | `acceptance-r2-regression.py` | r2 驗收量尺的 regression，讀 `ACCEPTANCE-r2.md` |
+| 工具：自測 | `selftests/judge_selftest.py`、`selftests/score_selftest.py`、`selftests/record_selftest.py`、`selftests/transport_selftest.py` | 零成本自測 |
+| 工具：自測 | `acceptance-r2-regression.py` | r2 驗收量尺的 regression，讀 `ACCEPTANCE-r2.md`。硬編 r2 當時的環境與 repo 狀態，在 C0（`f219b12`）已知 FAIL，所以不列入常用檢查 |
 | 案例 | `routing-fixtures.json` | harness-routing suite（dispatch 與 judgment 的邊界、交棒） |
 | 案例 | `seed/` | subject cwd 的前置檔案（SPEC.md、date.ts 等） |
 | 案例 | `context/rules.md` | runner 注入的規則檔（`run-suite.sh` 的 `RULES_SOURCE`） |
@@ -149,7 +150,18 @@ identity 由 [`../../../scripts/bundle-hash.sh`](../../../scripts/bundle-hash.sh
 
 ## 常用零成本檢查
 
-自測指令見 [`STATUS.md`](STATUS.md)「要接手的話」。
+自測指令，都在 repo 根目錄執行：
+
+- **第一行只彙總四支 Python 自測。** 任一支失敗，該行結尾的 `[ "$rc" -eq 0 ]` 就回傳非零。
+- **後兩行是獨立的檢查。** 它們的結果不會併入第一行，每一行的 exit code 都要分別確認。
+
+```sh
+rc=0; for f in judge record score transport; do python3 -B skills/harness/evals/selftests/${f}_selftest.py || rc=1; done; [ "$rc" -eq 0 ]
+sh scripts/hash-domain-selftest.sh
+sh scripts/run-provenance-selftest.sh
+```
+
+[`STATUS.md`](STATUS.md)「要接手的話」裡的自測指令仍是 2026-09-14 以前的舊路徑。那一段屬於歷史段落，不改寫，路徑對照見 STATUS 的遷移紀錄。
 該段把 `~/.claude/CLAUDE.md` 列為規則檔來源，但現行 `run-suite.sh` 讀的是 `context/rules.md`，以程式為準。
 
 帳本一致性檢查：

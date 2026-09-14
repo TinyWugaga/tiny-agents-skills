@@ -18,7 +18,7 @@
 """
 import hashlib, json, os, sys, tempfile, types
 
-BASE = os.path.dirname(os.path.abspath(__file__))
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE)
 import record  # noqa: E402
 
