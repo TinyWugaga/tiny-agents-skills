@@ -1,10 +1,11 @@
 # productivity
 
-跨平台的日常工作流 skill。目前一個 standalone skill:
+跨平台的日常工作流 skill。目前兩個 standalone skill:
 
 | Skill | 職責 | 觸發 |
 |---|---|---|
 | [`grill-me`](grill-me) | 連續訪談,逐一釐清不可逆決策,收斂成 pre-ADR 決策文件 | 使用者明確要求被訪談(「拷問我」「壓力測試這個設計」「連續問我到收斂」「grill me」) |
+| [`tiny-mode`](tiny-mode) | 補 `CLAUDE.md` 沒寫到的個人工作慣例:驗收、外部 review、前端分段、git 邊界、handoff 格式 | 只能手動觸發(`/tiny-mode`),`disable-model-invocation: true` |
 
 分界:`grill-me` 只處理**使用者明確要求的多輪訪談**,產出是決策集而非散文文件。
 一次性 review 一份計畫、diff 或文件不觸發;協助撰寫或潤飾文件內容也不觸發,那是文件協作
